@@ -1,0 +1,37 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProvider } from '@/context/AppContext';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { LandingPage } from '@/components/LandingPage';
+import { Login } from '@/components/Login';
+import { Register } from '@/components/Register';
+import { Dashboard } from '@/components/Dashboard';
+import { MonthDetail } from '@/components/MonthDetail';
+import { Profile } from '@/components/Profile';
+import { Layout } from '@/components/Layout/Layout';
+import { ProtectedRoute } from '@/components/Layout/ProtectedRoute';
+
+function App() {
+  return (
+    <AppProvider>
+      <TooltipProvider delayDuration={200}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Layout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/month/:monthId" element={<MonthDetail />} />
+                <Route path="/profile" element={<Profile />} />
+              </Route>
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AppProvider>
+  );
+}
+
+export default App;

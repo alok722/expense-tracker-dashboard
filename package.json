@@ -1,0 +1,32 @@
+{
+  "name": "expense-tracker-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently \"yarn workspace server dev\" \"yarn workspace client dev\"",
+    "dev:server": "yarn workspace server dev",
+    "dev:client": "yarn workspace client dev",
+    "build": "yarn workspace client build",
+    "start": "yarn workspace server start",
+    "lint": "yarn workspace client lint && yarn workspace server lint",
+    "lint:fix": "yarn workspace client lint --fix && yarn workspace server lint:fix",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "client/**/*.{ts,tsx}": [
+      "yarn workspace client lint --fix"
+    ],
+    "server/**/*.ts": [
+      "yarn workspace server lint:fix"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
+  }
+}

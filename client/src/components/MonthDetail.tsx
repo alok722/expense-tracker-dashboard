@@ -1,0 +1,256 @@
+import { useParams, useNavigate } from "react-router-dom";
+import { useApp } from "@/context/AppContext";
+import { formatCurrency } from "@/utils/calculations";
+import { IncomeSection } from "./IncomeSection";
+import { ExpenseSection } from "./ExpenseSection";
+import { ExpenseBreakdownChart } from "./Charts/ExpenseBreakdownChart";
+import { IncomeBreakdownChart } from "./Charts/IncomeBreakdownChart";
+import { IncomeVsExpenseChart } from "./Charts/IncomeVsExpenseChart";
+import { CarryForwardTrendChart } from "./Charts/CarryForwardTrendChart";
+import { NeedWantNeutralChart } from "./Charts/NeedWantNeutralChart";
+import { MonthTrendChart } from "./Charts/MonthTrendChart";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  TrendingUp,
+  TrendingDown,
+  Wallet,
+  Loader2,
+} from "lucide-react";
+
+export function MonthDetail() {
+  const { monthId } = useParams<{ monthId: string }>();
+  const navigate = useNavigate();
+  const { months, isLoading, currency } = useApp();
+
+  const month = months.find((m) => m._id === monthId);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-emerald-400" />
+      </div>
+    );
+  }
+
+  if (!month) {
+    return (
+      <div className="text-center py-16">
+        <h2 className="text-2xl font-bold text-white mb-4">Month not found</h2>
+        <Button
+          onClick={() => navigate("/dashboard")}
+          variant="outline"
+          className="text-slate-300 border-slate-600"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Dashboard
+        </Button>
+      </div>
+    );
+  }
+
+  const isPositive = month.carryForward >= 0;
+
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Button
+          onClick={() => navigate("/dashboard")}
+          variant="ghost"
+          size="icon"
+          className="text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </Button>
+        <div>
+          <h1 className="text-3xl font-bold text-white">{month.monthName}</h1>
+          <p className="text-slate-400">Manage your income and expenses</p>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-slate-800/50 border-slate-700/50">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-emerald-500/10 rounded-xl">
+                <TrendingUp className="w-6 h-6 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-400">Total Income</p>
+                <p className="text-2xl font-bold text-emerald-400">
+                  {formatCurrency(month.totalIncome, currency)}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700/50">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-red-500/10 rounded-xl">
+                <TrendingDown className="w-6 h-6 text-red-400" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-400">Total Expense</p>
+                <p className="text-2xl font-bold text-red-400">
+                  {formatCurrency(month.totalExpense, currency)}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-slate-800/50 border-slate-700/50">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div
+                className={`p-3 rounded-xl ${
+                  isPositive ? "bg-emerald-500/10" : "bg-red-500/10"
+                }`}
+              >
+                <Wallet
+                  className={`w-6 h-6 ${
+                    isPositive ? "text-emerald-400" : "text-red-400"
+                  }`}
+                />
+              </div>
+              <div>
+                <p className="text-sm text-slate-400">Carry Forward</p>
+                <div className="flex items-center gap-2">
+                  <p
+                    className={`text-2xl font-bold ${
+                      isPositive ? "text-emerald-400" : "text-red-400"
+                    }`}
+                  >
+                    {formatCurrency(month.carryForward, currency)}
+                  </p>
+                  <Badge variant={isPositive ? "success" : "destructive"}>
+                    {isPositive ? "Surplus" : "Deficit"}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Tabs */}
+      <Tabs defaultValue="income" className="space-y-6">
+        <TabsList className="bg-slate-800/50 border border-slate-700/50">
+          <TabsTrigger
+            value="income"
+            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+          >
+            Income
+          </TabsTrigger>
+          <TabsTrigger
+            value="expenses"
+            className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
+          >
+            Expenses
+          </TabsTrigger>
+          <TabsTrigger
+            value="charts"
+            className="data-[state=active]:bg-primary data-[state=active]:text-white"
+          >
+            Analytics
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="income">
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-6">
+              <IncomeSection
+                monthId={month._id}
+                income={month.income}
+                totalIncome={month.totalIncome}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="expenses">
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-6">
+              <ExpenseSection
+                monthId={month._id}
+                expenses={month.expenses}
+                totalExpense={month.totalExpense}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="charts" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="bg-slate-800/50 border-slate-700/50">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Income Breakdown
+                </h3>
+                <IncomeBreakdownChart income={month.income} />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700/50">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Expense Breakdown
+                </h3>
+                <ExpenseBreakdownChart expenses={month.expenses} />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700/50">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Income vs Expense
+                </h3>
+                <IncomeVsExpenseChart
+                  totalIncome={month.totalIncome}
+                  totalExpense={month.totalExpense}
+                />
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-800/50 border-slate-700/50">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Need vs Want vs Neutral
+                </h3>
+                <NeedWantNeutralChart expenses={month.expenses} />
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Month-over-Month Trends
+              </h3>
+              <MonthTrendChart months={months} />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">
+                Carry Forward Trend
+              </h3>
+              <CarryForwardTrendChart
+                months={months}
+                currentMonthId={month._id}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
