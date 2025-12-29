@@ -397,10 +397,12 @@ The production build will be available in `client/dist/`
 Navigate to your **Profile** page (click user icon in navbar) to manage recurring expenses:
 
 1. **View Recurring Expenses**
+
    - See all your recurring expenses with category, amount, note, and tag
    - Total recurring expenses displayed at the bottom
 
 2. **Add New Recurring Expense**
+
    - Click **"Add Recurring Expense"** button
    - Enter category name (e.g., "Netflix Subscription")
    - Enter amount (e.g., 649)
@@ -409,6 +411,7 @@ Navigate to your **Profile** page (click user icon in navbar) to manage recurrin
    - Click **"Add"**
 
 3. **Edit Recurring Expense**
+
    - Click the **pencil icon** (✏️) next to any recurring expense
    - Modify category, amount, note, or tag
    - Click **"Save Changes"**
@@ -776,47 +779,6 @@ For questions, suggestions, or feedback:
 
 - GitHub Issues: [Create an issue](../../issues)
 - Project Link: [Expense Tracker Dashboard](../../)
-
----
-
-## 🔄 Recent Updates
-
-### v2.0 - MongoDB Migration (December 2024)
-
-**Major Changes:**
-
-- ✅ Migrated from JSON file storage to **MongoDB Atlas** with **Mongoose**
-- ✅ Implemented secure password hashing with **bcrypt**
-- ✅ Added professional logging with **Winston** and **Morgan**
-- ✅ Unified data structure: income entries now mirror expense entries format
-- ✅ **Enhanced recurring expenses with full CRUD operations** (create, edit, delete via Profile page)
-- ✅ Environment-based configuration for client (Vite) and server
-- ✅ Improved error handling and validation
-- ✅ 100% test coverage with comprehensive E2E test suite
-
-**Breaking Changes:**
-
-- User IDs are now MongoDB ObjectIds (not numeric)
-- All API responses use MongoDB's native `_id` field
-- Environment variables required for database connection (`DB_PASSWORD`)
-- Client now uses environment variables (`VITE_API_BASE_URL`)
-
-**Database Improvements:**
-
-- Automatic timestamps (createdAt, updatedAt)
-- Proper nested array handling with Mongoose
-- Referential integrity across collections
-- Indexed queries for better performance
-
-**New Features:**
-
-- ✅ **Recurring Expenses Management**: Full CRUD UI in Profile page
-  - View all recurring expenses with totals
-  - Add new recurring expenses with custom categories
-  - Edit existing recurring expenses (category, amount, note, tag)
-  - Delete recurring expenses with confirmation
-- ✅ Environment variable support for client and server
-- ✅ Production-ready configuration management
 
 ---
 
