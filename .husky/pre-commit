@@ -1,7 +1,11 @@
 echo "🔍 Running pre-commit checks..."
 
-# Run lint-staged for linting
-echo "📝 Linting staged files..."
+# Run full lint on client and server
+echo "📝 Running linters..."
+yarn lint
+
+# Run lint-staged for auto-fixing staged files
+echo "🔧 Auto-fixing staged files..."
 npx lint-staged
 
 # Run server tests
