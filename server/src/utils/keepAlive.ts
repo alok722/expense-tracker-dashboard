@@ -18,7 +18,9 @@ export function startKeepAlive() {
   }
 
   logger.info(
-    `Keep-alive enabled: pinging ${HEALTH_ENDPOINT} every ${KEEP_ALIVE_INTERVAL / 1000}s`
+    `Keep-alive enabled: pinging ${HEALTH_ENDPOINT} every ${
+      KEEP_ALIVE_INTERVAL / 1000
+    }s`
   );
 
   setInterval(async () => {
@@ -32,4 +34,3 @@ export function startKeepAlive() {
     }
   }, KEEP_ALIVE_INTERVAL);
 }
-

@@ -75,7 +75,7 @@ async function bootstrap() {
     // Start server
     app.listen(PORT, () => {
       logger.info(`Server running on http://localhost:${PORT}`);
-      
+
       // Start keep-alive mechanism for Render free tier
       startKeepAlive();
     });
