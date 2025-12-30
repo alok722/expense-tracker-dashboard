@@ -13,6 +13,7 @@ import {
 } from "./config/database";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 import { logger, stream } from "./config/logger";
+import { startKeepAlive } from "./utils/keepAlive";
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -74,6 +75,9 @@ async function bootstrap() {
     // Start server
     app.listen(PORT, () => {
       logger.info(`Server running on http://localhost:${PORT}`);
+      
+      // Start keep-alive mechanism for Render free tier
+      startKeepAlive();
     });
 
     // Graceful shutdown handlers
