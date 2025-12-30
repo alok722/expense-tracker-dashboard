@@ -70,3 +70,36 @@ export interface AuthUser {
   name?: string;
   currency?: 'USD' | 'INR';
 }
+
+// AI Insights Types
+export interface FinancialInsight {
+  id: string;
+  title: string;
+  description: string;
+  category: 'spending' | 'budget' | 'savings' | 'prediction' | 'health';
+  severity?: 'info' | 'warning' | 'success' | 'critical';
+  actionable?: boolean;
+}
+
+export interface OverviewInsights {
+  financialHealthScore: number;
+  summary: string;
+  insights: FinancialInsight[];
+  predictions: string[];
+  generatedAt: string;
+}
+
+export interface MonthlyInsights {
+  monthSummary: string;
+  insights: FinancialInsight[];
+  comparisons: {
+    previousMonth?: string;
+    changes: Array<{
+      category: string;
+      change: number;
+      direction: 'up' | 'down';
+    }>;
+  };
+  recommendations: string[];
+  generatedAt: string;
+}

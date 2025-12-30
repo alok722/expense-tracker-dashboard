@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { monthDataService } from "../services";
+import { monthDataService, InsightsService } from "../services";
 import { logger } from "../config/logger";
 
 const router = Router();
@@ -46,6 +46,10 @@ router.post("/month", async (req: Request, res: Response) => {
     }
 
     const newMonth = await monthDataService.createMonth(userId, year, month);
+    
+    // Clear insights cache
+    await InsightsService.clearUserCache(userId);
+    
     res.status(201).json(newMonth);
   } catch (error: any) {
     if (error.message === "MONTH_EXISTS") {
@@ -76,6 +80,10 @@ router.post("/income/entry", async (req: Request, res: Response) => {
       amount,
       note
     );
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.status(201).json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {
@@ -104,6 +112,10 @@ router.put("/income/entry/:entryId", async (req: Request, res: Response) => {
       amount,
       note
     );
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {
@@ -129,6 +141,10 @@ router.delete("/income/entry/:entryId", async (req: Request, res: Response) => {
     }
 
     const month = await monthDataService.deleteIncomeEntry(entryId, monthId);
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {
@@ -154,6 +170,10 @@ router.delete("/income/:incomeId", async (req: Request, res: Response) => {
     }
 
     const month = await monthDataService.deleteIncomeCategory(incomeId, monthId);
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {
@@ -185,6 +205,10 @@ router.post("/expense/entry", async (req: Request, res: Response) => {
       note,
       tag
     );
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.status(201).json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {
@@ -214,6 +238,10 @@ router.put("/expense/entry/:entryId", async (req: Request, res: Response) => {
       note,
       tag
     );
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {
@@ -239,6 +267,10 @@ router.delete("/expense/entry/:entryId", async (req: Request, res: Response) => 
     }
 
     const month = await monthDataService.deleteExpenseEntry(entryId, monthId);
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {
@@ -264,6 +296,10 @@ router.delete("/expense/:expenseId", async (req: Request, res: Response) => {
     }
 
     const month = await monthDataService.deleteExpenseCategory(expenseId, monthId);
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(month.userId, monthId);
+    
     res.json(month);
   } catch (error: any) {
     if (error.message === "MONTH_NOT_FOUND") {

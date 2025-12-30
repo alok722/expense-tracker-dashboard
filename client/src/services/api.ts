@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AuthUser, MonthData, RecurringExpense } from "@/types";
+import { AuthUser, MonthData, RecurringExpense, OverviewInsights, MonthlyInsights } from "@/types";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api",
@@ -284,5 +284,49 @@ export async function updateRecurringExpense(
   updates: { category?: string; amount?: number; note?: string; tag?: string }
 ): Promise<RecurringExpense> {
   const response = await api.put(`/recurring/${id}`, updates);
+  return response.data;
+}
+
+// AI Insights
+export async function fetchOverviewInsights(
+  userId: string
+): Promise<OverviewInsights> {
+  const response = await api.get<OverviewInsights>("/insights/overview", {
+    params: { userId },
+  });
+  return response.data;
+}
+
+export async function fetchMonthlyInsights(
+  userId: string,
+  monthId: string
+): Promise<MonthlyInsights> {
+  const response = await api.get<MonthlyInsights>(
+    `/insights/month/${monthId}`,
+    {
+      params: { userId },
+    }
+  );
+  return response.data;
+}
+
+export async function regenerateOverviewInsights(
+  userId: string
+): Promise<OverviewInsights> {
+  const response = await api.post<OverviewInsights>(
+    "/insights/regenerate/overview",
+    { userId }
+  );
+  return response.data;
+}
+
+export async function regenerateMonthlyInsights(
+  userId: string,
+  monthId: string
+): Promise<MonthlyInsights> {
+  const response = await api.post<MonthlyInsights>(
+    `/insights/regenerate/month/${monthId}`,
+    { userId }
+  );
   return response.data;
 }

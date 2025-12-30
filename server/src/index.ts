@@ -5,6 +5,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth";
 import dataRoutes from "./routes/data";
 import recurringRoutes from "./routes/recurring";
+import insightsRoutes from "./routes/insights";
 import {
   connectDatabase,
   disconnectDatabase,
@@ -44,6 +45,7 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/data", dataRoutes);
 app.use("/api/recurring", recurringRoutes);
+app.use("/api/insights", insightsRoutes);
 
 // Health check with database status
 app.get("/api/health", async (_req, res) => {

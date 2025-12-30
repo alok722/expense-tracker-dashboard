@@ -3,6 +3,7 @@ import { useApp } from "@/context/AppContext";
 import { formatCurrency } from "@/utils/calculations";
 import { IncomeSection } from "./IncomeSection";
 import { ExpenseSection } from "./ExpenseSection";
+import { MonthlyInsightsCard } from "./AIInsights/MonthlyInsightsCard";
 import { ExpenseBreakdownChart } from "./Charts/ExpenseBreakdownChart";
 import { IncomeBreakdownChart } from "./Charts/IncomeBreakdownChart";
 import { IncomeVsExpenseChart } from "./Charts/IncomeVsExpenseChart";
@@ -24,7 +25,7 @@ import {
 export function MonthDetail() {
   const { monthId } = useParams<{ monthId: string }>();
   const navigate = useNavigate();
-  const { months, isLoading, currency } = useApp();
+  const { months, isLoading, currency, user } = useApp();
 
   const month = months.find((m) => m._id === monthId);
 
@@ -161,6 +162,12 @@ export function MonthDetail() {
           >
             Analytics
           </TabsTrigger>
+          <TabsTrigger
+            value="ai-insights"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white"
+          >
+            AI Insights
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="income">
@@ -247,6 +254,16 @@ export function MonthDetail() {
                 months={months}
                 currentMonthId={month._id}
               />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="ai-insights">
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-6">
+              {user && monthId && (
+                <MonthlyInsightsCard userId={user.id} monthId={monthId} />
+              )}
             </CardContent>
           </Card>
         </TabsContent>

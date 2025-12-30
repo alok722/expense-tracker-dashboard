@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "@/context/AppContext";
 import { MonthCard } from "./MonthCard";
+import { OverviewInsightsCard } from "./AIInsights/OverviewInsightsCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -46,7 +47,7 @@ const MONTHS = [
 ];
 
 export function Dashboard() {
-  const { months, isLoading, createMonth, currency } = useApp();
+  const { months, isLoading, createMonth, currency, user } = useApp();
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth();
 
@@ -283,6 +284,13 @@ export function Dashboard() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* AI Insights Section */}
+      {user && months.length > 0 && (
+        <div className="mb-8">
+          <OverviewInsightsCard userId={user.id} />
+        </div>
+      )}
 
       {/* Month Grid Grouped by Year */}
       {months.length === 0 ? (

@@ -11,6 +11,7 @@ import {
   ArrowRight,
   CheckCircle2,
   LayoutDashboard,
+  Brain,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -40,6 +41,12 @@ export function LandingPage() {
 
   const features = [
     {
+      icon: Brain,
+      title: "AI-Powered Insights",
+      description:
+        "Get personalized financial health scores, spending analysis, and predictive recommendations powered by OpenAI.",
+    },
+    {
       icon: PieChart,
       title: "Smart Categorization",
       description:
@@ -66,12 +73,14 @@ export function LandingPage() {
   ];
 
   const benefits = [
+    "AI-powered financial health scores",
     "Track unlimited income and expenses",
     "Beautiful charts and visualizations",
+    "Personalized spending recommendations",
     "Monthly financial summaries",
     "Carry-forward balance tracking",
     "Need/Want/Neutral categorization",
-    "Export and backup your data",
+    "Smart caching for instant insights",
   ];
 
   return (
@@ -155,11 +164,11 @@ export function LandingPage() {
       >
         <div className="text-center space-y-8">
           <motion.div 
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium"
             {...fadeInUp}
           >
-            <Sparkles className="w-4 h-4" />
-            Smart Financial Management
+            <Brain className="w-4 h-4" />
+            AI-Powered Financial Management
           </motion.div>
 
           <motion.h1 
@@ -177,9 +186,9 @@ export function LandingPage() {
             className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
             {...fadeInUp}
           >
-            Take control of your money with intelligent expense tracking,
-            beautiful visualizations, and actionable insights. Know exactly
-            where your money goes.
+            Take control of your money with AI-powered insights, intelligent expense tracking,
+            beautiful visualizations, and personalized recommendations. Get your financial health score
+            and know exactly where your money goes.
           </motion.p>
 
           <motion.div 
@@ -290,7 +299,7 @@ export function LandingPage() {
         </motion.div>
 
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"
           variants={staggerContainer}
         >
           {features.map((feature, index) => (
@@ -333,7 +342,7 @@ export function LandingPage() {
               </h2>
               <p className="text-lg text-slate-400 mb-8">
                 Join thousands of users who have taken control of their
-                financial future with our intuitive expense tracking platform.
+                financial future with AI-powered insights and intuitive expense tracking.
               </p>
               <motion.div 
                 className="grid grid-cols-1 sm:grid-cols-2 gap-4"
