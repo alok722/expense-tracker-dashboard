@@ -40,6 +40,24 @@ import {
 import { formatCurrency } from "@/utils/calculations";
 import type { RecurringExpense } from "@/types";
 import { toast } from "sonner";
+import { CategoryIcon } from "@/components/Tables/CategoryIcon";
+
+const EXPENSE_CATEGORIES = [
+  "Rent",
+  "EMIs",
+  "Groceries",
+  "Shopping",
+  "Food & Drinks",
+  "Credit Card",
+  "Bills & Utility",
+  "Transportation",
+  "Medical",
+  "Personal Care",
+  "Entertainment",
+  "Insurance",
+  "Investment",
+  "Miscellaneous",
+];
 
 export function Profile() {
   const navigate = useNavigate();
@@ -651,15 +669,30 @@ export function Profile() {
               <Label htmlFor="edit-category" className="text-slate-300">
                 Category
               </Label>
-              <Input
-                id="edit-category"
+              <Select
                 value={editForm.category}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, category: e.target.value })
+                onValueChange={(value) =>
+                  setEditForm({ ...editForm, category: value })
                 }
-                className="bg-slate-900/50 border-slate-600 text-white"
-                placeholder="e.g., Netflix, Rent"
-              />
+              >
+                <SelectTrigger className="bg-slate-900/50 border-slate-600 text-white">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-800 border-slate-700">
+                  {EXPENSE_CATEGORIES.map((cat) => (
+                    <SelectItem
+                      key={cat}
+                      value={cat}
+                      className="text-white focus:bg-slate-700 focus:text-white"
+                    >
+                      <div className="flex items-center gap-2">
+                        <CategoryIcon category={cat} type="expense" className="w-4 h-4" />
+                        <span>{cat}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">

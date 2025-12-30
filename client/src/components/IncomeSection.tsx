@@ -438,7 +438,10 @@ export function IncomeSection({
                       value={cat}
                       className="text-white focus:bg-slate-700 focus:text-white"
                     >
-                      {cat}
+                      <div className="flex items-center gap-2">
+                        <CategoryIcon category={cat} type="income" className="w-4 h-4" />
+                        <span>{cat}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>

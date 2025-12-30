@@ -17,6 +17,7 @@ import {
   Shield,
   TrendingDown,
   Package,
+  Film,
   LucideIcon,
 } from 'lucide-react';
 
@@ -41,6 +42,7 @@ export const EXPENSE_CATEGORY_ICONS: Record<string, LucideIcon> = {
   'Transportation': Car,
   'Medical': Heart,
   'Personal Care': Sparkles,
+  'Entertainment': Film,
   'Insurance': Shield,
   'Investment': TrendingDown,
   'Miscellaneous': Package,

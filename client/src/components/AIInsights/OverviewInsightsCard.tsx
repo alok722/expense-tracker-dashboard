@@ -73,7 +73,7 @@ export function OverviewInsightsCard({ userId }: OverviewInsightsCardProps) {
 
   if (isLoading) {
     return (
-      <Card className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50">
+      <Card className="bg-slate-800/50 border-slate-700/50">
         <CardContent className="p-6">
           <div className="flex items-center justify-center py-16">
             <Loader2 className="w-8 h-8 animate-spin text-emerald-400" />
@@ -85,7 +85,7 @@ export function OverviewInsightsCard({ userId }: OverviewInsightsCardProps) {
 
   if (error) {
     return (
-      <Card className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50">
+      <Card className="bg-slate-800/50 border-slate-700/50">
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <AlertCircle className="w-12 h-12 text-red-400 mb-4" />
@@ -102,7 +102,7 @@ export function OverviewInsightsCard({ userId }: OverviewInsightsCardProps) {
   if (!insights) return null;
 
   return (
-    <Card className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-emerald-500/20 shadow-lg shadow-emerald-500/5">
+    <Card className="bg-slate-800/50 border-slate-700/50">
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
           <button

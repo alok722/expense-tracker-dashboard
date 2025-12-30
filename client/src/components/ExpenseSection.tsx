@@ -69,6 +69,7 @@ const EXPENSE_CATEGORIES = [
   "Transportation",
   "Medical",
   "Personal Care",
+  "Entertainment",
   "Insurance",
   "Investment",
   "Miscellaneous",
@@ -536,7 +537,10 @@ export function ExpenseSection({
                       value={cat}
                       className="text-white focus:bg-slate-700 focus:text-white"
                     >
-                      {cat}
+                      <div className="flex items-center gap-2">
+                        <CategoryIcon category={cat} type="expense" className="w-4 h-4" />
+                        <span>{cat}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>

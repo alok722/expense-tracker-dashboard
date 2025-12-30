@@ -1,231 +1,104 @@
 # Expense Tracker Dashboard
 
-A modern, full-stack expense tracking web application with AI-powered insights. Track your income and expenses across multiple months with beautiful visualizations, smart analytics, and intuitive data management.
+Take control of your finances with AI-powered insights. Track income, manage expenses, and make smarter money decisions—all in one beautiful dashboard.
 
 ![Tech Stack](https://img.shields.io/badge/React-18-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green) ![AI Powered](https://img.shields.io/badge/AI-Gemini-orange)
 
-## ✨ Key Features
+## ✨ What You Can Do
 
-### 🔐 Authentication & Security
+### Track Your Money
+- Add income and expenses with detailed notes
+- Organize by categories (Rent, Groceries, Shopping, etc.)
+- Tag expenses as Need, Want, or Neutral
+- Set up recurring expenses (rent, subscriptions, etc.)
+- Track balance across months automatically
 
-- **User Registration & Login** - Secure authentication with bcrypt password hashing
-- **Password Change** - Update your password anytime from profile settings
-- **Account Deletion** - Permanently delete account with all data (requires confirmation)
-- **Multi-User Support** - Each user has isolated financial data
-- **Protected Admin Account** - Demo admin account cannot be deleted or have password changed
+### Get Smart Insights
+- See your financial health score (0-100)
+- Get personalized recommendations from AI
+- Compare spending month-over-month
+- Spot trends and patterns automatically
+- All insights cached for 24 hours for fast access
 
-### 💰 Financial Management
+### Visualize Your Data
+- Interactive pie charts for expense breakdown
+- Bar charts comparing income vs expenses
+- Track your savings over time
+- Filter by Need/Want/Neutral tags
+- Export data to Excel anytime
 
-- **Multi-Period Tracking** - Track income and expenses across months and years
-- **Entry-Based System** - Add multiple entries per category with detailed notes
-- **Smart Grouping** - Automatic category grouping with breakdown views
-- **Carry Forward** - Auto-calculated balance transfers between months
-- **Need/Want/Neutral Tags** - Categorize expenses for better spending insights (🔴 Need, 🟡 Want, ⚪ Neutral)
-- **Recurring Expenses** - Set up recurring expenses from profile settings
-
-### 📊 Analytics & Visualizations
-
-- **Expense Breakdown** - Interactive pie charts showing category-wise distribution
-- **Income vs Expense** - Bar charts comparing monthly income and expenses
-- **Need vs Want Analysis** - Visual breakdown of spending priorities
-- **Carry Forward Trends** - Line charts tracking balance over time
-- **Financial Summary Cards** - Quick overview of total income, expenses, and net balance
-
-### 🤖 AI-Powered Insights
-
-- **Financial Health Score** - AI-calculated score (0-100) based on your spending patterns
-- **Smart Recommendations** - Personalized suggestions for budget optimization
-- **Trend Analysis** - Month-over-month comparisons and predictions
-- **Spending Patterns** - Automated detection of spending habits
-- **24-Hour Caching** - Fast load times with intelligent cache management
-- **Powered by Gemini 1.5 Flash** - Google's advanced AI for accurate financial analysis
-
-### 🎨 User Experience
-
-- **Dark Theme** - Beautiful, modern dark mode interface
-- **Responsive Design** - Works perfectly on desktop, tablet, and mobile
-- **Toast Notifications** - Right-side floating notifications for all actions
-- **Custom Confirmation Dialogs** - Elegant dialogs instead of browser alerts
-- **Search & Filter** - Real-time search across categories and notes
-- **Sortable Tables** - Click column headers to sort data
-- **Interactive Tooltips** - Detailed transaction breakdowns on hover
-- **Smooth Animations** - Polished transitions and loading states
-
-### 🛠 Advanced Features
-
-- **Currency Support** - INR and USD with easy switching
-- **Profile Management** - Update display name and currency preferences
-- **Edit Capabilities** - Modify individual entries (amount, note, tag)
-- **Bulk Delete** - Remove entire categories with confirmation
-- **Excel Export** - Download financial data in Excel format with professional formatting
-- **Empty States** - Helpful guidance when no data exists
+### Stay Secure
+- Password-protected accounts
+- Each user's data is isolated
+- Change password or delete account anytime
+- Works on desktop, tablet, and mobile
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Try the Demo
 
-- Node.js 18+
-- Yarn package manager
-- MongoDB Atlas account (free tier)
-- Gemini API key (free from Google AI Studio)
+**Login:** `admin` / `admin`
 
-### Installation
+### Setup Your Own
 
-1. **Clone the repository**
+**Prerequisites:** Node.js 18+, Yarn, MongoDB Atlas account, Gemini API key
 
+1. **Install**
 ```bash
 git clone <repository-url>
 cd expense-tracker-dashboard
-```
-
-2. **Install dependencies**
-
-```bash
 yarn install
 ```
 
-3. **Configure environment variables**
+2. **Configure**
 
 Create `server/.env`:
-
 ```env
 DB_PASSWORD=your_mongodb_password
 PORT=5001
 GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-1.5-flash-latest
+GEMINI_MODEL=gemini-2.5-flash-lite
 ```
 
 Create `client/.env`:
-
 ```env
 VITE_API_BASE_URL=http://localhost:5001/api
 ```
 
-4. **Start the application**
-
+3. **Run**
 ```bash
 yarn dev
 ```
 
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+Visit [http://localhost:3000](http://localhost:3000)
 
-### Default Login
-
-- **Username**: `admin`
-- **Password**: `admin`
-
-## 📖 Usage Guide
+## 📖 How to Use
 
 ### Getting Started
+1. Login or create an account
+2. Click "Add Period" to start tracking a new month
+3. Add your income sources
+4. Record your expenses with categories and tags
+5. View your financial insights on the dashboard
 
-1. **Login** with the default credentials or create a new account
-2. **Create a Period** by clicking "Add Period" button
-3. **Add Income** entries with categories and notes
-4. **Add Expenses** with categories, notes, and Need/Want/Neutral tags
-5. **View Analytics** through interactive charts and AI insights
+### Key Features
+- **Search & Filter**: Find transactions instantly
+- **Edit Anytime**: Modify amounts, notes, or tags
+- **AI Insights**: Get financial advice on dashboard and month details
+- **Export Data**: Download Excel reports
+- **Profile Settings**: Update name, currency (INR/USD), password, or manage recurring expenses
 
-### Managing Your Profile
+## 🏗️ Built With
 
-- **Update Name**: Change your display name in profile settings
-- **Change Currency**: Switch between INR and USD
-- **Change Password**: Update your password securely (requires current password)
-- **Manage Recurring Expenses**: Set up expenses that repeat monthly
-- **Delete Account**: Permanently remove your account and all data (with confirmation)
+**Frontend:** React 18, TypeScript, TailwindCSS, shadcn/ui, Chart.js  
+**Backend:** Node.js, Express, MongoDB Atlas, Gemini AI  
+**Tools:** Vite, ESLint, Yarn Workspaces
 
-### Using AI Insights
+## 📋 Categories
 
-1. Navigate to Dashboard for **Overview Insights**
+**Income:** Salary • Carry Forward • Bonus • Freelance • Investment Returns • Rental Income • Others
 
-   - Financial health score
-   - Key spending insights
-   - Predictions and recommendations
-
-2. Click on any month for **Monthly Insights**
-
-   - Month-specific analysis
-   - Comparisons with previous months
-   - Actionable recommendations
-
-3. Click **Refresh** to regenerate insights with latest data
-
-### Advanced Features
-
-- **Search**: Use the search bar to find specific transactions
-- **Filter**: Filter expenses by Need/Want/Neutral tags
-- **Sort**: Click table headers to sort by category or amount
-- **Edit**: Click edit icon to modify individual entries
-- **Delete**: Click delete icon with confirmation for safe removal
-- **Export**: Download Excel files from Dashboard (full year) or Month Detail (single month)
-
-## 🏗️ Tech Stack
-
-### Frontend
-
-- React 18 + TypeScript + Vite
-- TailwindCSS + shadcn/ui components
-- Chart.js for visualizations
-- React Router for navigation
-- Sonner for toast notifications
-
-### Backend
-
-- Node.js + Express + TypeScript
-- MongoDB Atlas (cloud database)
-- Mongoose ODM
-- Google Gemini AI (1.5 Flash)
-- bcrypt for password security
-- Winston for logging
-
-### Development
-
-- Yarn workspaces (monorepo)
-- ESLint for code quality
-- Husky for pre-commit hooks
-- Concurrent dev servers
-
-## 📋 Default Categories
-
-### Income
-
-Salary • Carry Forward • Bonus • Freelance • Investment Returns • Rental Income • Others
-
-### Expenses
-
-Rent • EMIs • Groceries • Shopping • Food & Drinks • Credit Card • Bills & Utility • Transportation • Medical • Personal Care • Insurance • Investment • Miscellaneous
-
-## 🔌 API Reference
-
-### Authentication
-
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - Create new account
-- `POST /api/auth/change-password` - Change password
-- `PUT /api/auth/profile` - Update profile
-- `DELETE /api/auth/account` - Delete account (with cascade)
-
-### Data Management
-
-- `GET /api/data` - Fetch all months
-- `POST /api/data/month` - Create new period
-- `POST /api/data/income/entry` - Add income entry
-- `POST /api/data/expense/entry` - Add expense entry
-- `PUT /api/data/income/entry/:id` - Update income entry
-- `DELETE /api/data/expense/entry/:id` - Delete expense entry
-
-### Recurring Expenses
-
-- `GET /api/recurring` - List recurring expenses
-- `POST /api/recurring` - Create recurring expense
-- `PUT /api/recurring/:id` - Update recurring expense
-- `DELETE /api/recurring/:id` - Delete recurring expense
-
-### AI Insights
-
-- `GET /api/insights/overview` - Dashboard insights
-- `GET /api/insights/month/:id` - Monthly insights
-- `POST /api/insights/regenerate/overview` - Refresh overview
-- `POST /api/insights/regenerate/month/:id` - Refresh monthly
+**Expenses:** Rent • EMIs • Groceries • Shopping • Food & Drinks • Credit Card • Bills & Utility • Transportation • Medical • Personal Care • Entertainment • Insurance • Investment • Miscellaneous
 
 ## 🎯 Planned Features
 
@@ -260,27 +133,11 @@ Rent • EMIs • Groceries • Shopping • Food & Drinks • Credit Card • B
 
 ## 💡 Contributing
 
-Contributions are welcome! Here's how:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Contributions welcome! Fork, create a feature branch, commit your changes, and open a Pull Request.
 
 ## 📝 License
 
 MIT License - Copyright (c) 2025 Alok Raj
-
-## 🙏 Credits
-
-Built with:
-
-- [shadcn/ui](https://ui.shadcn.com/) - UI Components
-- [Chart.js](https://www.chartjs.org/) - Data Visualizations
-- [Lucide](https://lucide.dev/) - Icons
-- [TailwindCSS](https://tailwindcss.com/) - Styling
-- [Google Gemini](https://ai.google.dev/) - AI Insights
 
 ---
 
