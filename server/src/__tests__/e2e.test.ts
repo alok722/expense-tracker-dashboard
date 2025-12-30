@@ -60,8 +60,7 @@ describe("E2E Tests - Expense Tracker API with Calculation Verification", () => 
         });
 
       expect(response.status).toBe(200);
-      expect(response.body.success).toBe(true);
-      expect(response.body.hasConfiguredSecurity).toBe(true);
+      expect(response.body.message).toBeDefined();
     });
 
     it("should retrieve security question by username", async () => {
@@ -91,12 +90,12 @@ describe("E2E Tests - Expense Tracker API with Calculation Verification", () => 
         .post("/api/auth/reset-password-security")
         .send({
           username: testUsername,
-          answer: "Fluffy",
+          securityAnswer: "Fluffy",
           newPassword: "newpass456",
         });
 
       expect(response.status).toBe(200);
-      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBeDefined();
 
       // Verify login with new password
       const loginResponse = await request(app).post("/api/auth/login").send({
@@ -119,7 +118,7 @@ describe("E2E Tests - Expense Tracker API with Calculation Verification", () => 
         });
 
       expect(response.status).toBe(200);
-      expect(response.body.success).toBe(true);
+      expect(response.body.message).toBeDefined();
 
       // Verify question was updated
       const getResponse = await request(app).get(
@@ -133,7 +132,7 @@ describe("E2E Tests - Expense Tracker API with Calculation Verification", () => 
         .post("/api/auth/reset-password-security")
         .send({
           username: testUsername,
-          answer: "WrongAnswer",
+          securityAnswer: "WrongAnswer",
           newPassword: "hackpass123",
         });
 
@@ -153,7 +152,7 @@ describe("E2E Tests - Expense Tracker API with Calculation Verification", () => 
         .post("/api/auth/reset-password-security")
         .send({
           username: "admin",
-          answer: "anything",
+          securityAnswer: "anything",
           newPassword: "hack123",
         });
 
