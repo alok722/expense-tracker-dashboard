@@ -46,6 +46,29 @@ export async function updateProfile(
   return response.data;
 }
 
+export async function changePassword(
+  userId: string,
+  currentPassword: string,
+  newPassword: string
+): Promise<{ message: string }> {
+  const response = await api.post<{ message: string }>("/auth/change-password", {
+    userId,
+    currentPassword,
+    newPassword,
+  });
+  return response.data;
+}
+
+export async function deleteAccount(
+  userId: string,
+  password: string
+): Promise<{ message: string }> {
+  const response = await api.delete<{ message: string }>("/auth/account", {
+    data: { userId, password },
+  });
+  return response.data;
+}
+
 // Data
 export async function fetchMonthsData(userId: string): Promise<MonthData[]> {
   const response = await api.get<MonthData[]>("/data", {

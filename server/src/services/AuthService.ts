@@ -107,6 +107,85 @@ export class AuthService {
       currency: updatedUser.currency || "INR",
     };
   }
+
+  /**
+   * Change user password
+   */
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string
+  ): Promise<{ message: string }> {
+    // Validate new password length
+    if (newPassword.length < 4) {
+      throw new Error("PASSWORD_TOO_SHORT");
+    }
+
+    // Find user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("USER_NOT_FOUND");
+    }
+
+    // Verify current password
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!passwordMatch) {
+      throw new Error("INVALID_PASSWORD");
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+    // Update password
+    user.password = hashedPassword;
+    await user.save();
+
+    logger.info(`Password changed for user: ${user.username}`);
+
+    return { message: "Password changed successfully" };
+  }
+
+  /**
+   * Delete user account and all associated data
+   */
+  async deleteAccount(
+    userId: string,
+    password: string
+  ): Promise<{ message: string }> {
+    // Import models here to avoid circular dependencies
+    const { MonthData, RecurringExpense } = await import("../models");
+    const InsightsCache = (await import("../models/InsightsCache")).default;
+
+    // Find user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("USER_NOT_FOUND");
+    }
+
+    // Verify password
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      throw new Error("INVALID_PASSWORD");
+    }
+
+    const username = user.username;
+
+    // Delete all associated data
+    await Promise.all([
+      MonthData.deleteMany({ userId }),
+      RecurringExpense.deleteMany({ userId }),
+      InsightsCache.deleteMany({ userId }),
+      User.findByIdAndDelete(userId),
+    ]);
+
+    logger.info(`Account deleted for user: ${username} (ID: ${userId})`);
+
+    return { message: "Account deleted successfully" };
+  }
 }
 
 // Export singleton instance

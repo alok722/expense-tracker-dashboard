@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
 import {
   Tooltip,
   TooltipContent,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Info, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface BreakdownTooltipProps {
   entries: (IncomeEntry | ExpenseEntry)[] | undefined;
@@ -49,7 +51,11 @@ export function BreakdownTooltip({
   onDelete,
 }: BreakdownTooltipProps) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<
+    (IncomeEntry | ExpenseEntry) | null
+  >(null);
+  const [deletingEntry, setDeletingEntry] = useState<
     (IncomeEntry | ExpenseEntry) | null
   >(null);
   const [editForm, setEditForm] = useState({
@@ -80,12 +86,12 @@ export function BreakdownTooltip({
 
     const amount = parseFloat(editForm.amount);
     if (isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid amount greater than 0");
+      toast.error("Please enter a valid amount greater than 0");
       return;
     }
 
     if (!editForm.note.trim()) {
-      alert("Please enter a note");
+      toast.error("Please enter a note");
       return;
     }
 
@@ -99,9 +105,10 @@ export function BreakdownTooltip({
       );
       setEditDialogOpen(false);
       setEditingEntry(null);
+      toast.success("Entry updated successfully");
     } catch (error) {
       console.error("Failed to edit entry:", error);
-      alert("Failed to edit entry. Please try again.");
+      toast.error("Failed to edit entry. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -110,21 +117,14 @@ export function BreakdownTooltip({
   const handleDelete = async (entry: IncomeEntry | ExpenseEntry) => {
     if (!onDelete) return;
 
-    if (
-      !confirm(
-        `Delete this entry: ${formatCurrency(entry.amount, currency)} - ${
-          entry.note
-        }?`
-      )
-    ) {
-      return;
-    }
-
     try {
       await onDelete(entry.id);
+      toast.success("Entry deleted successfully");
+      setDeleteDialogOpen(false);
+      setDeletingEntry(null);
     } catch (error) {
       console.error("Failed to delete entry:", error);
-      alert("Failed to delete entry. Please try again.");
+      toast.error("Failed to delete entry. Please try again.");
     }
   };
 
@@ -230,7 +230,8 @@ export function BreakdownTooltip({
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleDelete(entry);
+                                    setDeletingEntry(entry);
+                                    setDeleteDialogOpen(true);
                                   }}
                                   className="p-1.5 hover:bg-red-500/20 text-red-400 rounded transition-colors"
                                   title="Delete entry"
@@ -386,6 +387,29 @@ export function BreakdownTooltip({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Entry Confirmation Dialog */}
+      <ConfirmationDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete Entry"
+        description={
+          deletingEntry
+            ? `Are you sure you want to delete this entry: ${formatCurrency(
+                deletingEntry.amount,
+                currency
+              )} - ${deletingEntry.note}?`
+            : "Are you sure you want to delete this entry?"
+        }
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (deletingEntry) {
+            handleDelete(deletingEntry);
+          }
+        }}
+      />
     </>
   );
 }

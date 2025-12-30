@@ -8,6 +8,7 @@ import {
 } from "react";
 import { AuthUser, MonthData, RecurringExpense } from "@/types";
 import * as api from "@/services/api";
+import { toast } from "sonner";
 
 interface AppContextType {
   user: AuthUser | null;
@@ -24,6 +25,11 @@ interface AppContextType {
   ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateProfile: (name?: string, currency?: "USD" | "INR") => Promise<void>;
+  changePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => Promise<void>;
+  deleteAccount: (password: string) => Promise<void>;
   refreshData: () => Promise<void>;
   addIncome: (
     monthId: string,
@@ -204,6 +210,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
       throw err;
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const changePassword = async (
+    currentPassword: string,
+    newPassword: string
+  ) => {
+    if (!user) return;
+    try {
+      await api.changePassword(user.id, currentPassword, newPassword);
+      toast.success("Password changed successfully");
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.error || "Failed to change password";
+      toast.error(errorMsg);
+      throw err;
+    }
+  };
+
+  const deleteAccount = async (password: string) => {
+    if (!user) return;
+    try {
+      await api.deleteAccount(user.id, password);
+      toast.success("Account deleted successfully");
+      logout();
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.error || "Failed to delete account";
+      toast.error(errorMsg);
+      throw err;
     }
   };
 
@@ -509,6 +543,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         register,
         logout,
         updateProfile,
+        changePassword,
+        deleteAccount,
         refreshData,
         addIncome,
         addIncomeEntry,

@@ -275,6 +275,7 @@ GEMINI_MODEL=gemini-1.5-flash-latest
 ```
 
 **Get your Gemini API Key:**
+
 1. Sign up at [Google AI Studio](https://aistudio.google.com/)
 2. Navigate to "Get API key" section
 3. Create a new API key
@@ -411,6 +412,7 @@ The production build will be available in `client/dist/`
 ### Using AI Financial Insights
 
 1. **Dashboard Overview Insights**:
+
    - Automatically generated on the dashboard when you have financial data
    - Shows your financial health score (0-100)
    - Provides key insights about spending patterns, budget optimization, and savings tips
@@ -418,6 +420,7 @@ The production build will be available in `client/dist/`
    - Click "Refresh" to regenerate insights with latest data
 
 2. **Monthly AI Insights**:
+
    - Navigate to any month and click the **"AI Insights"** tab
    - Get detailed month-specific analysis
    - See month-over-month comparisons with previous period
@@ -426,6 +429,7 @@ The production build will be available in `client/dist/`
    - Click "Refresh" to get fresh insights
 
 3. **Smart Caching**:
+
    - Insights are cached for 24 hours for fast loading
    - Automatically refreshed when you add/edit/delete transactions
    - Powered by OpenAI GPT-4o-mini for cost-effective, high-quality analysis
@@ -519,12 +523,12 @@ Navigate to your **Profile** page (click user icon in navbar) to manage recurrin
 
 ### Insights Routes
 
-| Method | Endpoint                          | Description                  | Query/Body                 |
-| ------ | --------------------------------- | ---------------------------- | -------------------------- |
-| GET    | `/api/insights/overview`          | Get dashboard insights       | Query: `?userId={id}`      |
-| GET    | `/api/insights/month/:monthId`    | Get monthly insights         | Query: `?userId={id}`      |
-| POST   | `/api/insights/regenerate/overview` | Force regenerate overview  | Body: `{ userId }`         |
-| POST   | `/api/insights/regenerate/month/:monthId` | Force regenerate monthly | Body: `{ userId }` |
+| Method | Endpoint                                  | Description               | Query/Body            |
+| ------ | ----------------------------------------- | ------------------------- | --------------------- |
+| GET    | `/api/insights/overview`                  | Get dashboard insights    | Query: `?userId={id}` |
+| GET    | `/api/insights/month/:monthId`            | Get monthly insights      | Query: `?userId={id}` |
+| POST   | `/api/insights/regenerate/overview`       | Force regenerate overview | Body: `{ userId }`    |
+| POST   | `/api/insights/regenerate/month/:monthId` | Force regenerate monthly  | Body: `{ userId }`    |
 
 ### Health Check
 
@@ -610,6 +614,7 @@ The application uses **MongoDB Atlas** (cloud-hosted) with **Mongoose ODM** for 
    - Tracks per-entry notes and tags
 
 3. **RecurringExpense Model** (`RecurringExpense.ts`)
+
    - User-defined recurring expenses
    - Can be used to auto-populate future months
    - Supports need/want/neutral categorization
@@ -739,7 +744,6 @@ The application uses MongoDB with Mongoose ODM for data persistence. Data is sto
 
 ## 🚀 Potential New Features
 
-- AI-powered insights ✅ **IMPLEMENTED**
 - Budget planning & alerts with progress tracking
 - Split transactions across categories
 - Multi-currency support with conversion
@@ -755,7 +759,6 @@ The application uses MongoDB with Mongoose ODM for data persistence. Data is sto
 - Keyboard shortcuts
 - Bulk operations
 - Undo/Redo functionality
-- AI-powered insights
 - Investment tracking
 - Bank integration & auto-import
 - Shared/Family accounts
@@ -778,6 +781,7 @@ The expense tracker now includes AI-powered financial insights using Google's Ge
 ### Features
 
 **Dashboard Overview Insights:**
+
 - Financial health score (0-100) based on savings rate and expense control
 - Overall financial summary and trend analysis
 - Key insights covering spending patterns, budget optimization, and financial health
@@ -785,6 +789,7 @@ The expense tracker now includes AI-powered financial insights using Google's Ge
 - Visual categorization by severity (info, warning, success, critical)
 
 **Monthly Analytics Insights:**
+
 - Detailed month-specific analysis
 - Month-over-month comparison with previous periods
 - Category-wise spending breakdown
@@ -795,24 +800,28 @@ The expense tracker now includes AI-powered financial insights using Google's Ge
 ### Technical Implementation
 
 **Caching Strategy:**
+
 - Insights are cached in MongoDB for 24 hours
 - Automatic cache invalidation on any data mutation (add/edit/delete)
 - Reduces API costs and provides instant load times for cached results
 - Per-user and per-month granular caching
 
 **Cache Invalidation:**
+
 - Creating a new period clears overview cache
 - Adding/editing/deleting income entries clears both month and overview cache
 - Adding/editing/deleting expense entries clears both month and overview cache
 - Manual refresh button to regenerate insights on-demand
 
 **Cost Optimization:**
+
 - Uses Gemini 1.5 Flash (Free tier: 15 requests/minute, 1M requests/day)
 - Estimated cost: FREE for most users (within free tier limits)
 - Smart prompting reduces token usage
 - Structured JSON responses for efficient parsing
 
 **Performance:**
+
 - Cached insights: <100ms load time
 - Fresh generation: 2-4 seconds
 - Background processing with loading states
@@ -821,6 +830,7 @@ The expense tracker now includes AI-powered financial insights using Google's Ge
 ### Configuration
 
 1. **Get Gemini API Key:**
+
    - Sign up at [Google AI Studio](https://aistudio.google.com/)
    - Click "Get API key" in the top navigation
    - Create a new API key for your project
@@ -839,17 +849,20 @@ The expense tracker now includes AI-powered financial insights using Google's Ge
 ### Usage
 
 1. **Enable Insights:**
+
    - Add your Gemini API key to server `.env`
    - Restart the server
    - Insights will automatically appear on Dashboard and Month Detail pages
 
 2. **View Dashboard Insights:**
+
    - Navigate to Dashboard
    - Scroll to "AI Financial Insights" card
    - Review health score, key insights, and predictions
    - Click "Refresh" to regenerate
 
 3. **View Monthly Insights:**
+
    - Open any month detail page
    - Click "AI Insights" tab
    - Review month summary, comparisons, and recommendations

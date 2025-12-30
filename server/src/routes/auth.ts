@@ -21,6 +21,17 @@ interface UpdateProfileRequest {
   currency?: "USD" | "INR";
 }
 
+interface ChangePasswordRequest {
+  userId: string;
+  currentPassword: string;
+  newPassword: string;
+}
+
+interface DeleteAccountRequest {
+  userId: string;
+  password: string;
+}
+
 router.post(
   "/login",
   async (req: Request<object, object, LoginRequest>, res: Response) => {
@@ -91,6 +102,60 @@ router.put(
         res.status(404).json({ error: "User not found" });
       } else {
         logger.error("Profile update error:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  }
+);
+
+router.post(
+  "/change-password",
+  async (req: Request<object, object, ChangePasswordRequest>, res: Response) => {
+    const { userId, currentPassword, newPassword } = req.body;
+
+    if (!userId || !currentPassword || !newPassword) {
+      res.status(400).json({ error: "User ID, current password, and new password are required" });
+      return;
+    }
+
+    try {
+      const result = await authService.changePassword(userId, currentPassword, newPassword);
+      res.json(result);
+    } catch (error: any) {
+      if (error.message === "USER_NOT_FOUND") {
+        res.status(404).json({ error: "User not found" });
+      } else if (error.message === "INVALID_PASSWORD") {
+        res.status(401).json({ error: "Current password is incorrect" });
+      } else if (error.message === "PASSWORD_TOO_SHORT") {
+        res.status(400).json({ error: "New password must be at least 4 characters" });
+      } else {
+        logger.error("Password change error:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  }
+);
+
+router.delete(
+  "/account",
+  async (req: Request<object, object, DeleteAccountRequest>, res: Response) => {
+    const { userId, password } = req.body;
+
+    if (!userId || !password) {
+      res.status(400).json({ error: "User ID and password are required" });
+      return;
+    }
+
+    try {
+      const result = await authService.deleteAccount(userId, password);
+      res.json(result);
+    } catch (error: any) {
+      if (error.message === "USER_NOT_FOUND") {
+        res.status(404).json({ error: "User not found" });
+      } else if (error.message === "INVALID_PASSWORD") {
+        res.status(401).json({ error: "Password is incorrect" });
+      } else {
+        logger.error("Account deletion error:", error);
         res.status(500).json({ error: "Internal server error" });
       }
     }

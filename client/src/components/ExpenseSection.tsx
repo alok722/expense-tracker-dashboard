@@ -29,6 +29,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
 import {
   Plus,
   Trash2,
@@ -41,6 +42,7 @@ import {
 } from "lucide-react";
 import { CategoryIcon } from "@/components/Tables/CategoryIcon";
 import { BreakdownTooltip } from "@/components/Tables/BreakdownTooltip";
+import { toast } from "sonner";
 
 interface ExpenseSectionProps {
   monthId: string;
@@ -87,6 +89,12 @@ export function ExpenseSection({
     tag: "neutral",
     isRecurring: false,
   });
+
+  // Confirmation dialog state
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    expense: ExpenseItem | null;
+  }>({ open: false, expense: null });
 
   // Search, filter, and sort state
   const [searchQuery, setSearchQuery] = useState("");
@@ -230,12 +238,12 @@ export function ExpenseSection({
 
     const amount = parseFloat(formData.amount);
     if (isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid amount greater than 0");
+      toast.error("Please enter a valid amount greater than 0");
       return;
     }
 
     if (!formData.note.trim()) {
-      alert("Please enter a note");
+      toast.error("Please enter a note");
       return;
     }
 
@@ -267,25 +275,21 @@ export function ExpenseSection({
         isRecurring: false,
       });
       setIsAddDialogOpen(false);
+      toast.success("Expense added successfully");
     } catch (error) {
       console.error("Failed to add expense:", error);
-      alert("Failed to add expense. Please try again.");
+      toast.error("Failed to add expense. Please try again.");
     }
   };
 
   const handleDeleteCategory = async (expense: ExpenseItem) => {
-    if (
-      !confirm(
-        `Are you sure you want to delete all "${expense.category}" expenses?`
-      )
-    )
-      return;
-
     try {
       await deleteExpense(expense.id, monthId);
+      toast.success(`Expense category "${expense.category}" deleted`);
+      setDeleteDialog({ open: false, expense: null });
     } catch (error) {
       console.error("Failed to delete expense:", error);
-      alert("Failed to delete expense. Please try again.");
+      toast.error("Failed to delete expense. Please try again.");
     }
   };
 
@@ -472,7 +476,7 @@ export function ExpenseSection({
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 opacity-0 group-hover:opacity-100"
-                      onClick={() => handleDeleteCategory(expense)}
+                      onClick={() => setDeleteDialog({ open: true, expense })}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -655,6 +659,24 @@ export function ExpenseSection({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Expense Category Confirmation Dialog */}
+      <ConfirmationDialog
+        open={deleteDialog.open}
+        onOpenChange={(open) =>
+          setDeleteDialog({ open, expense: deleteDialog.expense })
+        }
+        title="Delete Expense Category"
+        description={`Are you sure you want to delete all "${deleteDialog.expense?.category}" expenses? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (deleteDialog.expense) {
+            handleDeleteCategory(deleteDialog.expense);
+          }
+        }}
+      />
     </div>
   );
 }

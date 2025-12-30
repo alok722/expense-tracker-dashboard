@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from '@/context/AppContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Toaster } from '@/components/ui/sonner';
 import { LandingPage } from '@/components/LandingPage';
 import { Login } from '@/components/Login';
 import { Register } from '@/components/Register';
@@ -30,6 +31,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      <Toaster />
     </AppProvider>
   );
 }

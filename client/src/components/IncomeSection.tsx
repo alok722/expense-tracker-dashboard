@@ -29,6 +29,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { toast } from "sonner";
 import {
   Plus,
   Trash2,
@@ -75,6 +77,12 @@ export function IncomeSection({
     amount: "",
     note: "",
   });
+
+  // Confirmation dialog state
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    item: IncomeItem | null;
+  }>({ open: false, item: null });
 
   // Search and sort state
   const [searchQuery, setSearchQuery] = useState("");
@@ -194,12 +202,12 @@ export function IncomeSection({
 
     const amount = parseFloat(formData.amount);
     if (isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid amount greater than 0");
+      toast.error("Please enter a valid amount greater than 0");
       return;
     }
 
     if (!formData.note.trim()) {
-      alert("Please enter a note");
+      toast.error("Please enter a note");
       return;
     }
 
@@ -212,25 +220,21 @@ export function IncomeSection({
       );
       setFormData({ category: "", amount: "", note: "" });
       setIsAddDialogOpen(false);
+      toast.success("Income added successfully");
     } catch (error) {
       console.error("Failed to add income:", error);
-      alert("Failed to add income. Please try again.");
+      toast.error("Failed to add income. Please try again.");
     }
   };
 
   const handleDeleteCategory = async (item: IncomeItem) => {
-    if (
-      !confirm(
-        `Are you sure you want to delete all "${item.category}" income entries?`
-      )
-    )
-      return;
-
     try {
       await deleteIncome(item.id, monthId);
+      toast.success(`Income category "${item.category}" deleted`);
+      setDeleteDialog({ open: false, item: null });
     } catch (error) {
       console.error("Failed to delete income:", error);
-      alert("Failed to delete income. Please try again.");
+      toast.error("Failed to delete income. Please try again.");
     }
   };
 
@@ -375,7 +379,7 @@ export function IncomeSection({
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 opacity-0 group-hover:opacity-100"
-                      onClick={() => handleDeleteCategory(item)}
+                      onClick={() => setDeleteDialog({ open: true, item })}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -495,6 +499,24 @@ export function IncomeSection({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Income Category Confirmation Dialog */}
+      <ConfirmationDialog
+        open={deleteDialog.open}
+        onOpenChange={(open) =>
+          setDeleteDialog({ open, item: deleteDialog.item })
+        }
+        title="Delete Income Category"
+        description={`Are you sure you want to delete all "${deleteDialog.item?.category}" income entries? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (deleteDialog.item) {
+            handleDeleteCategory(deleteDialog.item);
+          }
+        }}
+      />
     </div>
   );
 }
