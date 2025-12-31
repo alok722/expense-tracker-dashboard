@@ -23,6 +23,8 @@ import {
   Wallet,
   Download,
   Loader2,
+  BarChart3,
+  Sparkles,
 } from "lucide-react";
 
 export function MonthDetail() {
@@ -169,29 +171,33 @@ export function MonthDetail() {
 
       {/* Tabs */}
       <Tabs defaultValue="income" className="space-y-6">
-        <TabsList className="bg-slate-800/50 border border-slate-700/50">
+        <TabsList className="grid w-full grid-cols-4 bg-slate-800/50 border border-slate-700/50 p-1">
           <TabsTrigger
             value="income"
-            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=inactive]:text-slate-400 data-[state=inactive]:hover:text-white transition-colors"
           >
+            <TrendingUp className="w-4 h-4 mr-2" />
             Income
           </TabsTrigger>
           <TabsTrigger
             value="expenses"
-            className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
+            className="data-[state=active]:bg-red-500 data-[state=active]:text-white data-[state=inactive]:text-slate-400 data-[state=inactive]:hover:text-white transition-colors"
           >
+            <TrendingDown className="w-4 h-4 mr-2" />
             Expenses
           </TabsTrigger>
           <TabsTrigger
             value="charts"
-            className="data-[state=active]:bg-primary data-[state=active]:text-white"
+            className="data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=inactive]:text-slate-400 data-[state=inactive]:hover:text-white transition-colors"
           >
+            <BarChart3 className="w-4 h-4 mr-2" />
             Analytics
           </TabsTrigger>
           <TabsTrigger
             value="ai-insights"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=inactive]:text-slate-400 data-[state=inactive]:hover:text-white transition-colors"
           >
+            <Sparkles className="w-4 h-4 mr-2" />
             AI Insights
           </TabsTrigger>
         </TabsList>
@@ -241,23 +247,27 @@ export function MonthDetail() {
             </Card>
 
             <Card className="bg-slate-800/50 border-slate-700/50">
-              <CardContent className="p-6">
+              <CardContent className="p-6 h-full flex flex-col">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Income vs Expense
                 </h3>
-                <IncomeVsExpenseChart
-                  totalIncome={month.totalIncome}
-                  totalExpense={month.totalExpense}
-                />
+                <div className="flex-1 min-h-[400px]">
+                  <IncomeVsExpenseChart
+                    totalIncome={month.totalIncome}
+                    totalExpense={month.totalExpense}
+                  />
+                </div>
               </CardContent>
             </Card>
 
             <Card className="bg-slate-800/50 border-slate-700/50">
-              <CardContent className="p-6">
+              <CardContent className="p-6 h-full flex flex-col">
                 <h3 className="text-lg font-semibold text-white mb-4">
                   Need vs Want vs Neutral
                 </h3>
-                <NeedWantNeutralChart expenses={month.expenses} />
+                <div className="flex-1 min-h-[400px]">
+                  <NeedWantNeutralChart expenses={month.expenses} />
+                </div>
               </CardContent>
             </Card>
           </div>

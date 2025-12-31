@@ -8,7 +8,6 @@ import { useTransactionForm } from "@/hooks/useTransactionForm";
 import { formatCurrency } from "@/utils/calculations";
 import { INCOME_CATEGORIES } from "@/constants/categories";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ValidatedInput } from "@/components/ui/validated-input";
 import { Label } from "@/components/ui/label";
 import { CategorySelect } from "@/components/shared/CategorySelect";
@@ -56,10 +55,8 @@ export function IncomeSection({
 }: IncomeSectionProps) {
   const { addIncomeEntry, deleteIncome, editIncomeEntry, deleteIncomeEntry, currency } = useApp();
   
-  // Dialog state
   const { isOpen: isAddDialogOpen, openDialog, closeDialog, setIsOpen: setIsAddDialogOpen } = useDialogState();
   
-  // Form state
   const {
     formData,
     setFormData,
@@ -70,13 +67,11 @@ export function IncomeSection({
     note: "",
   });
 
-  // Confirmation dialog state
   const [deleteDialog, setDeleteDialog] = useState<{
     open: boolean;
     item: IncomeItem | null;
   }>({ open: false, item: null });
 
-  // Group income by category (similar to expenses)
   const groupedIncome = (income || []).reduce((acc, item) => {
     const existing = acc.find((i) => i.category === item.category);
     if (existing) {
@@ -117,7 +112,6 @@ export function IncomeSection({
     (item) => item.amount > 0 || (item.entries && item.entries.length > 0)
   );
   
-  // Use table controls hook
   const {
     searchQuery,
     setSearchQuery,
@@ -132,7 +126,6 @@ export function IncomeSection({
     searchFields: ["category", "entries"],
   });
 
-  // Transaction form hook
   const { validateAndSubmit } = useTransactionForm(
     async (data) => {
       await addIncomeEntry(monthId, data.category, data.amount, data.note);
@@ -173,7 +166,6 @@ export function IncomeSection({
         </Button>
       </div>
 
-      {/* Search Bar */}
       <TableControls
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -182,7 +174,6 @@ export function IncomeSection({
         onClearFilters={clearFilters}
       />
 
-      {/* Hint for users */}
       {processedData.length > 0 && (
         <div className="text-xs text-slate-500 flex items-center gap-1">
           <span className="hidden md:inline">💡 Tip: Hover over breakdown to view and edit entries</span>
@@ -201,7 +192,7 @@ export function IncomeSection({
                 <SortableHeader
                   label="Category"
                   column="category"
-                  sortBy={sortBy}
+                  sortBy={sortBy as string | null}
                   sortOrder={sortOrder}
                   onSort={handleSort}
                 />
@@ -213,7 +204,7 @@ export function IncomeSection({
                 <SortableHeader
                   label="Amount"
                   column="amount"
-                  sortBy={sortBy}
+                  sortBy={sortBy as string | null}
                   sortOrder={sortOrder}
                   onSort={handleSort}
                   className="justify-end"
@@ -324,7 +315,6 @@ export function IncomeSection({
         </Table>
       </div>
 
-      {/* Add Income Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="bg-slate-900 border-slate-700 text-white">
           <DialogHeader>
@@ -347,7 +337,6 @@ export function IncomeSection({
                 }
                 categories={INCOME_CATEGORIES}
                 type="income"
-                autoFocus
               />
             </div>
 
@@ -425,7 +414,6 @@ export function IncomeSection({
         </DialogContent>
       </Dialog>
 
-      {/* Delete Income Category Confirmation Dialog */}
       <ConfirmationDialog
         open={deleteDialog.open}
         onOpenChange={(open) =>

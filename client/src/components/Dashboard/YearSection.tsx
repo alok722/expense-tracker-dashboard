@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { MonthCard } from "@/components/MonthCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MonthTrendChart } from "@/components/Charts/MonthTrendChart";
 import { CarryForwardTrendChart } from "@/components/Charts/CarryForwardTrendChart";
 import { InvestmentTrendChart } from "@/components/Charts/InvestmentTrendChart";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, TrendingUp, ChevronDown, ChevronRight, BarChart3 } from "lucide-react";
 import { MonthData } from "@/types";
 
 interface YearSectionProps {
@@ -20,64 +21,161 @@ export function YearSection({
   isExporting,
   onExportYear,
 }: YearSectionProps) {
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [showCharts, setShowCharts] = useState(false);
+  
+  const yearTotal = {
+    income: months.reduce((sum, m) => sum + m.totalIncome, 0),
+    expense: months.reduce((sum, m) => sum + m.totalExpense, 0),
+  };
+  const yearBalance = yearTotal.income - yearTotal.expense;
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <h2 className="text-2xl font-bold text-white">{year}</h2>
-        <div className="h-px flex-1 bg-gradient-to-r from-slate-700 to-transparent"></div>
-        <Button
-          onClick={() => onExportYear(year)}
-          disabled={isExporting}
-          size="sm"
-          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
-        >
-          {isExporting ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <Download className="w-4 h-4 mr-2" />
+    <div className="space-y-4">
+      {/* Compact Year Header */}
+      <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4 hover:border-slate-600/50 transition-all">
+        <div className="flex items-center justify-between gap-4">
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="flex items-center gap-3 flex-1 text-left group"
+          >
+            <div className="flex items-center gap-2">
+              {isExpanded ? (
+                <ChevronDown className="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors" />
+              ) : (
+                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-400 transition-colors" />
+              )}
+              <span className="text-2xl font-bold text-white">{year}</span>
+              <span className="text-sm text-slate-500">({months.length} months)</span>
+            </div>
+          </button>
+
+          {/* Inline Stats */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="px-3 py-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/20 text-xs">
+              <span className="text-slate-400">Income: </span>
+              <span className="text-emerald-400 font-semibold">{yearTotal.income.toLocaleString()}</span>
+            </div>
+            <div className="px-3 py-1.5 bg-red-500/10 rounded-lg border border-red-500/20 text-xs">
+              <span className="text-slate-400">Expense: </span>
+              <span className="text-red-400 font-semibold">{yearTotal.expense.toLocaleString()}</span>
+            </div>
+            <div className={`px-3 py-1.5 rounded-lg border text-xs ${
+              yearBalance >= 0 
+                ? 'bg-blue-500/10 border-blue-500/20' 
+                : 'bg-orange-500/10 border-orange-500/20'
+            }`}>
+              <span className="text-slate-400">Net: </span>
+              <span className={`font-semibold ${yearBalance >= 0 ? 'text-blue-400' : 'text-orange-400'}`}>
+                {yearBalance >= 0 ? '+' : ''}{yearBalance.toLocaleString()}
+              </span>
+            </div>
+            
+            <Button
+              onClick={() => onExportYear(year)}
+              disabled={isExporting}
+              size="sm"
+              variant="outline"
+              className="bg-slate-700/50 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-600 h-8"
+            >
+              {isExporting ? (
+                <Loader2 className="w-3 h-3 mr-1.5 animate-spin" />
+              ) : (
+                <Download className="w-3 h-3 mr-1.5" />
+              )}
+              Export
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Collapsible Content */}
+      {isExpanded && (
+        <div className="space-y-4 animate-fade-in">
+          {/* Month Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {months
+              .sort((a, b) => a.month - b.month)
+              .map((month, idx) => (
+                <div 
+                  key={month._id}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${idx * 0.03}s` }}
+                >
+                  <MonthCard month={month} />
+                </div>
+              ))}
+          </div>
+
+          {/* Charts Toggle Button */}
+          <div className="flex justify-center">
+            <Button
+              onClick={() => setShowCharts(!showCharts)}
+              variant="outline"
+              size="sm"
+              className="bg-slate-800/50 hover:bg-slate-700/50 text-slate-300 hover:text-white border-slate-700/50 hover:border-slate-600/50 transition-all"
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              {showCharts ? 'Hide Charts' : 'Show Trend Charts'}
+              {showCharts ? (
+                <ChevronDown className="w-4 h-4 ml-2" />
+              ) : (
+                <ChevronRight className="w-4 h-4 ml-2" />
+              )}
+            </Button>
+          </div>
+
+          {/* Collapsible Charts */}
+          {showCharts && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-fade-in">
+              <Card className="group relative overflow-hidden bg-slate-800/90 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/70 transition-all duration-300 shadow-lg">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <CardContent className="p-4 relative">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 bg-blue-500/10 rounded-lg">
+                      <TrendingUp className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <h3 className="text-sm font-semibold text-white">
+                      Month Trends
+                    </h3>
+                  </div>
+                  <MonthTrendChart months={months} />
+                </CardContent>
+              </Card>
+
+              <Card className="group relative overflow-hidden bg-slate-800/90 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/70 transition-all duration-300 shadow-lg">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <CardContent className="p-4 relative">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 bg-emerald-500/10 rounded-lg">
+                      <TrendingUp className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <h3 className="text-sm font-semibold text-white">
+                      Carry Forward
+                    </h3>
+                  </div>
+                  <CarryForwardTrendChart months={months} />
+                </CardContent>
+              </Card>
+
+              <Card className="group relative overflow-hidden bg-slate-800/90 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/70 transition-all duration-300 shadow-lg lg:col-span-2">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <CardContent className="p-4 relative">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 bg-purple-500/10 rounded-lg">
+                      <TrendingUp className="w-4 h-4 text-purple-400" />
+                    </div>
+                    <h3 className="text-sm font-semibold text-white">
+                      Investment Trend
+                    </h3>
+                  </div>
+                  <InvestmentTrendChart months={months} />
+                </CardContent>
+              </Card>
+            </div>
           )}
-          Export {year}
-        </Button>
-      </div>
-
-      {/* Month Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {months
-          .sort((a, b) => a.month - b.month)
-          .map((month) => (
-            <MonthCard key={month._id} month={month} />
-          ))}
-      </div>
-
-      {/* Trend Charts for the Year */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-slate-800/50 border-slate-700/50">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Month-over-Month Trends
-            </h3>
-            <MonthTrendChart months={months} />
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-800/50 border-slate-700/50">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Carry Forward Trend
-            </h3>
-            <CarryForwardTrendChart months={months} />
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-800/50 border-slate-700/50">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Investment Trend
-            </h3>
-            <InvestmentTrendChart months={months} />
-          </CardContent>
-        </Card>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

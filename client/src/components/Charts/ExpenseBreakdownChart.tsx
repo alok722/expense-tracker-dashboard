@@ -76,7 +76,7 @@ export function ExpenseBreakdownChart({ expenses }: ExpenseBreakdownChartProps) 
         formatter: (value: number) => {
           const total = expenses.reduce((sum, e) => sum + e.amount, 0);
           const percentage = ((value / total) * 100).toFixed(1);
-          return percentage > 5 ? `${percentage}%` : ''; // Only show if > 5%
+          return parseFloat(percentage) > 5 ? `${percentage}%` : '';
         },
       },
     },

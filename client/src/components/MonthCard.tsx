@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
-import { TrendingUp, TrendingDown, Wallet, ArrowRight, Trash2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, Wallet, Trash2, ChevronRight, Sparkles } from 'lucide-react';
 import { useSwipe } from '@/hooks/useSwipe';
 import { toast } from 'sonner';
 
@@ -45,19 +45,21 @@ export function MonthCard({ month }: MonthCardProps) {
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // Don't navigate if clicking delete button or dialog is open
     if ((e.target as HTMLElement).closest('button') || deleteDialogOpen) {
       return;
     }
     navigate(`/month/${month._id}`);
   };
 
+  const savingsRate = month.totalIncome > 0 
+    ? ((month.totalIncome - month.totalExpense) / month.totalIncome) * 100 
+    : 0;
+
   return (
     <>
-      <div className="relative overflow-hidden rounded-lg" {...handlers}>
-        {/* Delete background (revealed on swipe) */}
+      <div className="relative overflow-hidden rounded-xl" {...handlers}>
         <div
-          className="absolute inset-0 bg-red-500/90 flex items-center justify-end px-6 pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-end px-6 pointer-events-none z-0"
           style={{
             opacity: Math.min(Math.abs(swipeState.swipeProgress) / 80, 1),
           }}
@@ -65,77 +67,119 @@ export function MonthCard({ month }: MonthCardProps) {
           <Trash2 className="w-6 h-6 text-white" />
         </div>
 
-        {/* Card content */}
         <Card
-          className="bg-slate-800/50 border-slate-700/50 hover:bg-slate-800/80 hover:border-slate-600/50 transition-all duration-300 cursor-pointer group relative"
+          className="group relative overflow-hidden bg-slate-800/90 backdrop-blur-sm border-slate-700/50 hover:border-slate-600 hover:bg-slate-800 hover:shadow-lg transition-all duration-200 cursor-pointer"
           style={{
             transform: `translateX(${swipeState.swipeProgress}px)`,
             transition: swipeState.isSwiping ? 'none' : 'transform 0.3s ease-out',
           }}
           onClick={handleCardClick}
         >
-          <CardHeader className="pb-2">
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-slate-600/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          <CardHeader className="pb-2 relative z-10">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-white">
-                {month.monthName}
-              </CardTitle>
               <div className="flex items-center gap-2">
-                <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all md:block" />
+                <div className="p-1.5 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg backdrop-blur-sm border border-blue-400/20 transition-all">
+                  <Sparkles className="w-3 h-3 text-blue-400" />
+                </div>
+                <CardTitle className="text-lg font-bold text-white transition-colors">
+                  {month.monthName}
+                </CardTitle>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 text-slate-400 group-hover:text-slate-300 transition-all">
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </div>
                 
-                {/* Desktop delete button */}
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 opacity-0 group-hover:opacity-100 hidden md:flex"
+                  className="h-7 w-7 text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 opacity-0 group-hover:opacity-100 hidden md:flex"
                   onClick={(e) => {
                     e.stopPropagation();
                     setDeleteDialogOpen(true);
                   }}
                   title="Delete month"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3.5 h-3.5" />
                 </Button>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" />
-                  Income
+          
+          <CardContent className="space-y-3 relative z-10">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="p-2 bg-emerald-500/5 rounded-lg border border-emerald-500/10 group-hover:border-emerald-500/20 transition-all">
+                <div className="flex items-center gap-1.5 text-slate-400 text-xs mb-1">
+                  <div className="p-0.5 bg-emerald-500/10 rounded">
+                    <TrendingUp className="w-2.5 h-2.5 text-emerald-400" />
+                  </div>
+                  <span className="font-medium">Income</span>
                 </div>
-                <p className="text-xl font-bold text-emerald-400">
+                <p className="text-lg font-bold text-emerald-400">
                   {formatCurrency(month.totalIncome, currency)}
                 </p>
               </div>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                  <TrendingDown className="w-4 h-4 text-red-400" />
-                  Expense
+              
+              <div className="p-2 bg-red-500/5 rounded-lg border border-red-500/10 group-hover:border-red-500/20 transition-all">
+                <div className="flex items-center gap-1.5 text-slate-400 text-xs mb-1">
+                  <div className="p-0.5 bg-red-500/10 rounded">
+                    <TrendingDown className="w-2.5 h-2.5 text-red-400" />
+                  </div>
+                  <span className="font-medium">Expense</span>
                 </div>
-                <p className="text-xl font-bold text-red-400">
+                <p className="text-lg font-bold text-red-400">
                   {formatCurrency(month.totalExpense, currency)}
                 </p>
               </div>
             </div>
             
-            <div className="pt-3 border-t border-slate-700/50">
+            <div className="pt-2 border-t border-slate-700/50 space-y-1.5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                  <Wallet className="w-4 h-4" />
-                  Carry Forward
+                <div className="flex items-center gap-1.5 text-slate-400 text-xs">
+                  <Wallet className="w-3 h-3" />
+                  <span className="font-medium">Carry Forward</span>
                 </div>
-                <Badge variant={isPositive ? 'success' : 'destructive'} className="text-sm">
+                <Badge 
+                  variant={isPositive ? 'success' : 'destructive'} 
+                  className={`text-xs font-bold ${
+                    isPositive 
+                      ? 'bg-blue-500/10 text-blue-400 border-blue-400/30' 
+                      : 'bg-orange-500/10 text-orange-400 border-orange-400/30'
+                  }`}
+                >
                   {isPositive ? '+' : ''}{formatCurrency(month.carryForward, currency)}
                 </Badge>
+              </div>
+              
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-500">Savings Rate</span>
+                  <span className={`font-semibold ${
+                    savingsRate >= 30 ? 'text-emerald-400' : 
+                    savingsRate >= 10 ? 'text-blue-400' : 
+                    'text-slate-400'
+                  }`}>
+                    {savingsRate.toFixed(1)}%
+                  </span>
+                </div>
+                <div className="w-full bg-slate-700/30 rounded-full h-1 overflow-hidden">
+                  <div 
+                    className={`h-1 rounded-full transition-all duration-500 ${
+                      savingsRate >= 30 ? 'bg-gradient-to-r from-emerald-500 to-green-500' : 
+                      savingsRate >= 10 ? 'bg-gradient-to-r from-blue-500 to-cyan-500' : 
+                      'bg-gradient-to-r from-slate-500 to-slate-600'
+                    }`}
+                    style={{ width: `${Math.min(Math.abs(savingsRate), 100)}%` }}
+                  />
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Delete Confirmation Dialog */}
       <ConfirmationDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
@@ -145,7 +189,7 @@ export function MonthCard({ month }: MonthCardProps) {
         cancelText="Cancel"
         variant="danger"
         onConfirm={handleDelete}
-        loading={isDeleting}
+        isLoading={isDeleting}
       />
     </>
   );

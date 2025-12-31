@@ -17,7 +17,7 @@ interface HeroSectionProps {
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" },
+  transition: { duration: 0.6, ease: [0.6, -0.05, 0.01, 0.99] as const },
 };
 
 const staggerContainer = {
@@ -47,7 +47,9 @@ export function HeroSection({ user }: HeroSectionProps) {
       <div className="text-center space-y-8">
         <motion.div
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium"
-          {...fadeInUp}
+          initial={fadeInUp.initial}
+          animate={fadeInUp.animate}
+          transition={fadeInUp.transition}
         >
           <Brain className="w-4 h-4" />
           AI-Powered Financial Management
@@ -55,7 +57,9 @@ export function HeroSection({ user }: HeroSectionProps) {
 
         <motion.h1
           className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight"
-          {...fadeInUp}
+          initial={fadeInUp.initial}
+          animate={fadeInUp.animate}
+          transition={fadeInUp.transition}
         >
           <span className="text-white">Track Your Finances</span>
           <br />
@@ -66,7 +70,9 @@ export function HeroSection({ user }: HeroSectionProps) {
 
         <motion.p
           className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed"
-          {...fadeInUp}
+          initial={fadeInUp.initial}
+          animate={fadeInUp.animate}
+          transition={fadeInUp.transition}
         >
           Take control of your money with AI-powered insights, intelligent
           expense tracking, beautiful visualizations, and personalized
@@ -76,7 +82,9 @@ export function HeroSection({ user }: HeroSectionProps) {
 
         <motion.div
           className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4"
-          {...fadeInUp}
+          initial={fadeInUp.initial}
+          animate={fadeInUp.animate}
+          transition={fadeInUp.transition}
         >
           {user ? (
             <Button
@@ -108,7 +116,12 @@ export function HeroSection({ user }: HeroSectionProps) {
           )}
         </motion.div>
 
-        <motion.p className="text-sm text-slate-500" {...fadeInUp}>
+        <motion.p 
+          className="text-sm text-slate-500"
+          initial={fadeInUp.initial}
+          animate={fadeInUp.animate}
+          transition={fadeInUp.transition}
+        >
           {user
             ? `Welcome back, ${user.name || user.username}!`
             : "Free forever. No credit card required."}

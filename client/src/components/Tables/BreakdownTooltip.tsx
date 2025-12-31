@@ -1,7 +1,6 @@
 import { IncomeEntry, ExpenseEntry } from "@/types";
 import { formatCurrency } from "@/utils/calculations";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ValidatedInput } from "@/components/ui/validated-input";
 import { Label } from "@/components/ui/label";
 import {

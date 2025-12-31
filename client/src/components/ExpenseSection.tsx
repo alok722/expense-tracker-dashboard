@@ -8,7 +8,6 @@ import { useTransactionForm } from "@/hooks/useTransactionForm";
 import { formatCurrency } from "@/utils/calculations";
 import { EXPENSE_CATEGORIES } from "@/constants/categories";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ValidatedInput } from "@/components/ui/validated-input";
 import { Label } from "@/components/ui/label";
 import { CategorySelect } from "@/components/shared/CategorySelect";
@@ -64,18 +63,23 @@ export function ExpenseSection({
   expenses,
   totalExpense,
 }: ExpenseSectionProps) {
-  const { addExpenseEntry, deleteExpense, editExpenseEntry, deleteExpenseEntry, currency, createRecurringExpense } =
-    useApp();
-  
-  // Dialog state
-  const { isOpen: isAddDialogOpen, openDialog, closeDialog, setIsOpen: setIsAddDialogOpen } = useDialogState();
-  
-  // Form state
   const {
-    formData,
-    setFormData,
-    resetForm,
-  } = useFormState<ExpenseFormData>({
+    addExpenseEntry,
+    deleteExpense,
+    editExpenseEntry,
+    deleteExpenseEntry,
+    currency,
+    createRecurringExpense,
+  } = useApp();
+
+  const {
+    isOpen: isAddDialogOpen,
+    openDialog,
+    closeDialog,
+    setIsOpen: setIsAddDialogOpen,
+  } = useDialogState();
+
+  const { formData, setFormData, resetForm } = useFormState<ExpenseFormData>({
     category: "",
     amount: "",
     note: "",
@@ -83,21 +87,17 @@ export function ExpenseSection({
     isRecurring: false,
   });
 
-  // Confirmation dialog state
   const [deleteDialog, setDeleteDialog] = useState<{
     open: boolean;
     expense: ExpenseItem | null;
   }>({ open: false, expense: null });
 
-  // Group expenses by category
   const groupedExpenses = (expenses || []).reduce((acc, expense) => {
     const existing = acc.find((e) => e.category === expense.category);
     if (existing) {
-      // Merge entries if category exists
       if (expense.entries && expense.entries.length > 0) {
         existing.entries = [...(existing.entries || []), ...expense.entries];
       } else if (expense.amount > 0 || expense.comment) {
-        // Legacy format - convert to entry
         existing.entries = existing.entries || [];
         existing.entries.push({
           id: expense.id,
@@ -107,7 +107,6 @@ export function ExpenseSection({
       }
       existing.amount += expense.amount;
     } else {
-      // New category
       const entries: ExpenseEntry[] =
         expense.entries && expense.entries.length > 0
           ? expense.entries
@@ -129,13 +128,11 @@ export function ExpenseSection({
     return acc;
   }, [] as ExpenseItem[]);
 
-  // Filter out zero-amount categories with no entries
   const displayExpenses = groupedExpenses.filter(
     (expense) =>
       expense.amount > 0 || (expense.entries && expense.entries.length > 0)
   );
-  
-  // Use table controls hook
+
   const {
     searchQuery,
     setSearchQuery,
@@ -151,14 +148,11 @@ export function ExpenseSection({
     data: displayExpenses,
     searchFields: ["category", "entries"],
   });
-  
-  // Extract tag filter
+
   const tagFilter = filters.get("tag") || new Set();
 
-  // Transaction form hook
   const { validateAndSubmit } = useTransactionForm(
     async (data) => {
-      // Add to current month
       await addExpenseEntry(
         monthId,
         data.category,
@@ -167,7 +161,6 @@ export function ExpenseSection({
         data.tag
       );
 
-      // If recurring, save as template
       if (formData.isRecurring) {
         await createRecurringExpense(
           data.category,
@@ -213,7 +206,6 @@ export function ExpenseSection({
         </Button>
       </div>
 
-      {/* Search Bar */}
       <TableControls
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -222,15 +214,17 @@ export function ExpenseSection({
         onClearFilters={clearFilters}
       />
 
-      {/* Hint for users */}
       {processedData.length > 0 && (
         <div className="text-xs text-slate-500 flex items-center gap-1">
-          <span className="hidden md:inline">💡 Tip: Hover over breakdown to view and edit entries</span>
-          <span className="md:hidden">💡 Tip: Tap breakdown to view and edit entries</span>
+          <span className="hidden md:inline">
+            💡 Tip: Hover over breakdown to view and edit entries
+          </span>
+          <span className="md:hidden">
+            💡 Tip: Tap breakdown to view and edit entries
+          </span>
         </div>
       )}
 
-      {/* Tag Filters */}
       <TagFilter
         tagFilter={tagFilter as Set<"need" | "want" | "neutral">}
         onToggleTag={(tag) => toggleFilter("tag", tag)}
@@ -268,8 +262,12 @@ export function ExpenseSection({
               <TableHead className="text-slate-300 font-semibold">
                 <div className="flex items-center gap-1">
                   <span>Breakdown</span>
-                  <span className="hidden md:inline text-xs text-slate-500 font-normal">(hover to view)</span>
-                  <span className="md:hidden text-xs text-slate-500 font-normal">(tap to view)</span>
+                  <span className="hidden md:inline text-xs text-slate-500 font-normal">
+                    (hover to view)
+                  </span>
+                  <span className="md:hidden text-xs text-slate-500 font-normal">
+                    (tap to view)
+                  </span>
                 </div>
               </TableHead>
               <TableHead className="text-slate-300 text-right w-20 font-semibold">
@@ -326,16 +324,25 @@ export function ExpenseSection({
                       maxPreviewEntries={2}
                       onEdit={async (entryId, amount, note, tag) => {
                         try {
-                          await editExpenseEntry(entryId, monthId, amount, note, tag);
+                          await editExpenseEntry(
+                            entryId,
+                            monthId,
+                            amount,
+                            note,
+                            tag
+                          );
                         } catch (error) {
-                          console.error('Failed to edit expense entry:', error);
+                          console.error("Failed to edit expense entry:", error);
                         }
                       }}
                       onDelete={async (entryId) => {
                         try {
                           await deleteExpenseEntry(entryId, monthId);
                         } catch (error) {
-                          console.error('Failed to delete expense entry:', error);
+                          console.error(
+                            "Failed to delete expense entry:",
+                            error
+                          );
                         }
                       }}
                     />
@@ -374,13 +381,15 @@ export function ExpenseSection({
         </Table>
       </div>
 
-      {/* Add Expense Dialog */}
-      <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
-        setIsAddDialogOpen(open);
-        if (!open) {
-          resetForm();
-        }
-      }}>
+      <Dialog
+        open={isAddDialogOpen}
+        onOpenChange={(open) => {
+          setIsAddDialogOpen(open);
+          if (!open) {
+            resetForm();
+          }
+        }}
+      >
         <DialogContent className="bg-slate-900 border-slate-700 text-white">
           <DialogHeader>
             <DialogTitle>Add New Expense</DialogTitle>
@@ -402,7 +411,6 @@ export function ExpenseSection({
                 }
                 categories={EXPENSE_CATEGORIES}
                 type="expense"
-                autoFocus
               />
             </div>
 
@@ -449,7 +457,8 @@ export function ExpenseSection({
                 maxLength={100}
                 validation={(value) => {
                   if (!value.trim()) return "Note is required";
-                  if (value.length < 3) return "Note must be at least 3 characters";
+                  if (value.length < 3)
+                    return "Note must be at least 3 characters";
                   return null;
                 }}
                 showClearButton
@@ -536,7 +545,6 @@ export function ExpenseSection({
         </DialogContent>
       </Dialog>
 
-      {/* Delete Expense Category Confirmation Dialog */}
       <ConfirmationDialog
         open={deleteDialog.open}
         onOpenChange={(open) =>

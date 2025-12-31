@@ -18,7 +18,9 @@ interface AppContextType {
   register: (
     username: string,
     password: string,
-    name?: string
+    name?: string,
+    securityQuestion?: string,
+    securityAnswer?: string
   ) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateProfile: (name?: string, currency?: "USD" | "INR") => Promise<void>;
@@ -109,13 +111,10 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  // Auth hooks
   const { user, isLoading: authLoading, error: authError, login, register, logout, setUser } = useAuth();
   
-  // Derive currency from user
   const currency = user?.currency || "INR";
   
-  // Data hooks
   const {
     months,
     isLoading: dataLoading,
@@ -126,11 +125,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateMonthInState,
   } = useMonthData(user?.id);
   
-  // Income/Expense hooks
   const incomeOperations = useIncome(updateMonthInState);
   const expenseOperations = useExpense(updateMonthInState);
   
-  // Recurring expenses hook
   const {
     recurringExpenses,
     fetchRecurringExpenses,
@@ -139,10 +136,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateRecurringExpense,
   } = useRecurringExpenses(user?.id);
   
-  // Profile hooks
   const profileOperations = useProfile(user, setUser);
 
-  // Combine loading and error states
   const isLoading = authLoading || dataLoading;
   const error = authError || dataError;
 
