@@ -34,10 +34,11 @@ export function Logo({ size = "md", showText = true, className = "" }: LogoProps
       )}
       {showText && (
         <span 
-          className={`${sizes.text} font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent whitespace-nowrap leading-tight`}
+          className={`${sizes.text} font-bold whitespace-nowrap leading-tight flex items-baseline`}
           style={{ marginTop: "6px" }}
         >
-          MoneyLens.ai
+          <span className="text-white">MoneyLens</span>
+          <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">.ai</span>
         </span>
       )}
     </div>

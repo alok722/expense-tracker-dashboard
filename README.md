@@ -36,7 +36,13 @@ Take control of your finances with AI-powered insights. Track income, manage exp
 - Account recovery via security questions (no email needed)
 - Each user's data is isolated
 - Change password, security questions, or delete account anytime
-- Works on desktop, tablet, and mobile
+
+### Mobile-First Design
+
+- Fully responsive interface optimized for all screen sizes
+- Touch-friendly navigation with swipe gestures
+- Mobile-optimized layouts for dashboard, insights, and profile sections
+- Works seamlessly on desktop, tablet, and mobile devices
 
 ## 🚀 Quick Start
 
@@ -103,9 +109,10 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 ## 🏗️ Built With
 
-**Frontend:** React 18, TypeScript, TailwindCSS, shadcn/ui, Chart.js  
+**Frontend:** React 18, TypeScript, TailwindCSS, shadcn/ui, Chart.js, Framer Motion  
 **Backend:** Node.js, Express, MongoDB Atlas, Gemini AI  
-**Tools:** Vite, ESLint, Yarn Workspaces
+**Tools:** Vite, ESLint, Yarn Workspaces, ExcelJS  
+**UI Components:** Radix UI, Lucide Icons, Sonner (Toast Notifications)
 
 ## 📋 Categories
 
