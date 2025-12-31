@@ -180,45 +180,53 @@ export function OverviewInsightsCard({ userId }: OverviewInsightsCardProps) {
 
   return (
     <Card className="bg-slate-800/50 border-slate-700/50">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex items-start justify-between gap-3 mb-4">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-3 flex-1 text-left hover:opacity-80 transition-opacity"
+            className="flex items-start gap-2 sm:gap-3 flex-1 min-w-0 text-left hover:opacity-80 transition-opacity"
           >
-            <div className="p-2 bg-emerald-500/10 rounded-lg">
-              <Sparkles className="w-6 h-6 text-emerald-400" />
+            <div className="p-2 bg-emerald-500/10 rounded-lg flex-shrink-0">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
             </div>
-            <div>
-              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-white break-words">
                 AI Financial Insights
-                {isExpanded ? (
-                  <ChevronUp className="w-5 h-5 text-slate-400" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-slate-400" />
-                )}
               </h2>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 break-words">
                 Generated {new Date(insights.generatedAt).toLocaleDateString()}
                 {!isExpanded &&
                   ` • Score: ${insights.financialHealthScore}/100`}
               </p>
             </div>
           </button>
-          <Button
-            onClick={handleRegenerate}
-            disabled={isRegenerating}
-            variant="outline"
-            size="icon"
-            className="bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border-slate-600 hover:border-slate-500 transition-all flex-shrink-0"
-            title="Refresh insights"
-          >
-            {isRegenerating ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <RefreshCw className="w-4 h-4" />
-            )}
-          </Button>
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <Button
+              onClick={handleRegenerate}
+              disabled={isRegenerating}
+              variant="outline"
+              size="icon"
+              className="bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border-slate-600 hover:border-slate-500 transition-all h-8 w-8 sm:h-10 sm:w-10"
+              title="Refresh insights"
+            >
+              {isRegenerating ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
+            </Button>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="p-1.5 hover:bg-slate-700/50 rounded transition-colors flex-shrink-0"
+              aria-label={isExpanded ? "Collapse" : "Expand"}
+            >
+              {isExpanded ? (
+                <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
+              ) : (
+                <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" />
+              )}
+            </button>
+          </div>
         </div>
 
         {isExpanded && (

@@ -68,14 +68,14 @@ export function RecurringExpensesSection({
               {recurringExpenses.map((expense) => (
                 <div
                   key={expense._id}
-                  className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700/30"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 sm:p-4 bg-slate-900/50 rounded-lg border border-slate-700/30"
                 >
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-white">
+                      <span className="font-medium text-white break-words">
                         {expense.category}
                       </span>
-                      <span className="text-xs">
+                      <span className="text-xs flex-shrink-0">
                         {expense.tag === "need"
                           ? "🔴"
                           : expense.tag === "want"
@@ -83,41 +83,43 @@ export function RecurringExpensesSection({
                           : "⚪"}
                       </span>
                     </div>
-                    <div className="text-sm text-slate-400 mt-1">
+                    <div className="text-xs sm:text-sm text-slate-400 mt-1 break-words">
                       {expense.note}
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="font-semibold text-red-400">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 flex-shrink-0">
+                    <span className="font-semibold text-red-400 text-base sm:text-base whitespace-nowrap">
                       {formatCurrency(expense.amount, currency)}
                     </span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onEdit(expense)}
-                      className="h-8 w-8 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() =>
-                        setDeleteDialog({ open: true, expense })
-                      }
-                      className="h-8 w-8 text-slate-400 hover:text-red-400 hover:bg-red-500/10"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => onEdit(expense)}
+                        className="h-8 w-8 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 flex-shrink-0"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          setDeleteDialog({ open: true, expense })
+                        }
+                        className="h-8 w-8 text-slate-400 hover:text-red-400 hover:bg-red-500/10 flex-shrink-0"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
               <div className="mt-4 pt-4 border-t border-slate-700/50">
-                <div className="flex justify-between items-center text-sm">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm">
                   <span className="text-slate-400">
                     Total recurring per month:
                   </span>
-                  <span className="font-bold text-red-400 text-lg">
+                  <span className="font-bold text-red-400 text-base sm:text-lg">
                     {formatCurrency(
                       recurringExpenses.reduce((sum, e) => sum + e.amount, 0),
                       currency

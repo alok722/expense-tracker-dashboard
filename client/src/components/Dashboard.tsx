@@ -81,35 +81,35 @@ export function Dashboard() {
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
         
         <div className="relative z-10">
-          <div className="flex items-start justify-between flex-wrap gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="p-2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg backdrop-blur-sm border border-blue-400/30">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="space-y-2 flex-1 min-w-0">
+              <div className="flex items-start gap-2 sm:items-center">
+                <div className="p-2 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg backdrop-blur-sm border border-blue-400/30 flex-shrink-0">
                   <BarChart3 className="w-5 h-5 text-blue-400" />
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-white tracking-tight">
+                <div className="min-w-0 flex-1">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight break-words">
                     Financial Command Center
                   </h1>
-                  <p className="text-slate-400 text-sm flex items-center gap-2">
-                    <Activity className="w-3 h-3" />
-                    Real-time insights into your financial health
+                  <p className="text-slate-400 text-xs sm:text-sm flex items-center gap-2 mt-1">
+                    <Activity className="w-3 h-3 flex-shrink-0" />
+                    <span className="break-words">Real-time insights into your financial health</span>
                   </p>
                 </div>
               </div>
               
               {advancedMetrics && (
                 <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
-                  <div className="px-3 py-1 bg-slate-800/60 backdrop-blur-sm rounded-lg border border-slate-700/50">
+                  <div className="px-3 py-1 bg-slate-800/60 backdrop-blur-sm rounded-lg border border-slate-700/50 whitespace-nowrap">
                     <span className="text-slate-400">Period: </span>
                     <span className="text-white font-semibold">{advancedMetrics.totalMonths} months</span>
                   </div>
-                  <div className="px-3 py-1 bg-emerald-500/10 backdrop-blur-sm rounded-lg border border-emerald-500/30">
+                  <div className="px-3 py-1 bg-emerald-500/10 backdrop-blur-sm rounded-lg border border-emerald-500/30 whitespace-nowrap">
                     <span className="text-emerald-300">Savings: </span>
                     <span className="text-emerald-400 font-semibold">{advancedMetrics.savingsRate.toFixed(1)}%</span>
                   </div>
                   {advancedMetrics.incomeGrowth !== 0 && (
-                    <div className={`px-3 py-1 backdrop-blur-sm rounded-lg border ${
+                    <div className={`px-3 py-1 backdrop-blur-sm rounded-lg border whitespace-nowrap ${
                       advancedMetrics.incomeGrowth > 0 
                         ? 'bg-blue-500/10 border-blue-500/30' 
                         : 'bg-orange-500/10 border-orange-500/30'
@@ -128,7 +128,9 @@ export function Dashboard() {
               )}
             </div>
             
-            <MonthCreationDialog onCreateMonth={createMonth} />
+            <div className="flex-shrink-0 sm:self-start">
+              <MonthCreationDialog onCreateMonth={createMonth} />
+            </div>
           </div>
         </div>
       </div>

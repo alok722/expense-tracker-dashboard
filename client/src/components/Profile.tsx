@@ -147,20 +147,20 @@ export function Profile() {
       </div>
 
       <Tabs defaultValue="account" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 bg-slate-800/50 border border-slate-700/50">
+        <TabsList className="grid w-full grid-cols-2 bg-slate-800/50 border border-slate-700/50 h-auto sm:h-10">
           <TabsTrigger
             value="account"
-            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-1.5 flex items-center justify-center"
           >
-            <User className="w-4 h-4 mr-2" />
-            Account & Security
+            <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+            <span className="truncate">Account & Security</span>
           </TabsTrigger>
           <TabsTrigger
             value="data"
-            className="data-[state=active]:bg-cyan-500 data-[state=active]:text-white"
+            className="data-[state=active]:bg-cyan-500 data-[state=active]:text-white text-xs sm:text-sm px-2 sm:px-3 py-2 sm:py-1.5 flex items-center justify-center"
           >
-            <Database className="w-4 h-4 mr-2" />
-            Recurring & Data
+            <Database className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+            <span className="truncate">Recurring & Data</span>
           </TabsTrigger>
         </TabsList>
 
