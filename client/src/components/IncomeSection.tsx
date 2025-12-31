@@ -9,6 +9,7 @@ import { formatCurrency } from "@/utils/calculations";
 import { INCOME_CATEGORIES } from "@/constants/categories";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ValidatedInput } from "@/components/ui/validated-input";
 import { Label } from "@/components/ui/label";
 import { CategorySelect } from "@/components/shared/CategorySelect";
 import { SortableHeader } from "@/components/shared/SortableHeader";
@@ -346,6 +347,7 @@ export function IncomeSection({
                 }
                 categories={INCOME_CATEGORIES}
                 type="income"
+                autoFocus
               />
             </div>
 
@@ -353,7 +355,7 @@ export function IncomeSection({
               <Label htmlFor="amount" className="text-slate-300">
                 Amount (₹)
               </Label>
-              <Input
+              <ValidatedInput
                 id="amount"
                 type="number"
                 placeholder="e.g., 50000"
@@ -364,6 +366,16 @@ export function IncomeSection({
                 className="bg-slate-800 border-slate-700 text-white"
                 min="0"
                 step="0.01"
+                inputMode="decimal"
+                realTimeValidation={true}
+                validation={(value) => {
+                  const num = parseFloat(value);
+                  if (!value) return "Amount is required";
+                  if (isNaN(num)) return "Please enter a valid number";
+                  if (num <= 0) return "Amount must be greater than 0";
+                  return null;
+                }}
+                onEnter={handleAddIncome}
               />
             </div>
 
@@ -371,7 +383,7 @@ export function IncomeSection({
               <Label htmlFor="note" className="text-slate-300">
                 Note
               </Label>
-              <Input
+              <ValidatedInput
                 id="note"
                 placeholder="e.g., Monthly salary, Freelance project"
                 value={formData.note}
@@ -379,6 +391,15 @@ export function IncomeSection({
                   setFormData({ ...formData, note: e.target.value })
                 }
                 className="bg-slate-800 border-slate-700 text-white"
+                maxLength={100}
+                validation={(value) => {
+                  if (!value.trim()) return "Note is required";
+                  if (value.length < 3) return "Note must be at least 3 characters";
+                  return null;
+                }}
+                showClearButton
+                onClear={() => setFormData({ ...formData, note: "" })}
+                onEnter={handleAddIncome}
               />
             </div>
           </div>

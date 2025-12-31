@@ -540,6 +540,25 @@ export class MonthDataService {
 
     return month;
   }
+
+  /**
+   * Delete entire month
+   */
+  async deleteMonth(monthId: string, userId: string) {
+    const month = await MonthData.findOne({ _id: monthId, userId });
+    if (!month) {
+      throw new Error("MONTH_NOT_FOUND");
+    }
+
+    const monthName = month.monthName;
+
+    // Delete the month
+    await MonthData.deleteOne({ _id: monthId });
+
+    logger.info(`Month deleted: ${monthId} (${monthName}) by user ${userId}`);
+
+    return { success: true, monthName };
+  }
 }
 
 // Export singleton instance

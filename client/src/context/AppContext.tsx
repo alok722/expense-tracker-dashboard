@@ -85,6 +85,7 @@ interface AppContextType {
   deleteExpense: (expenseId: string, monthId: string) => Promise<void>;
   deleteExpenseEntry: (entryId: string, monthId: string) => Promise<void>;
   createMonth: (year: number, month: number) => Promise<void>;
+  deleteMonth: (monthId: string) => Promise<void>;
   fetchRecurringExpenses: () => Promise<void>;
   createRecurringExpense: (
     category: string,
@@ -121,6 +122,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     error: dataError,
     refreshData,
     createMonth,
+    deleteMonth,
     updateMonthInState,
   } = useMonthData(user?.id);
   
@@ -162,6 +164,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     ...incomeOperations,
     ...expenseOperations,
     createMonth,
+    deleteMonth,
     fetchRecurringExpenses,
     createRecurringExpense,
     deleteRecurringExpense,

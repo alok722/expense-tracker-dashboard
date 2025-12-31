@@ -7,6 +7,8 @@ import { AccountRecoverySection } from "./Profile/AccountRecoverySection";
 import { RecurringExpensesSection } from "./Profile/RecurringExpensesSection";
 import { DangerZoneSection } from "./Profile/DangerZoneSection";
 import { ProfileDialogs } from "./Profile/ProfileDialogs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { User, Database } from "lucide-react";
 import type { RecurringExpense } from "@/types";
 import { toast } from "sonner";
 import { getSecurityQuestion } from "@/services/api";
@@ -144,38 +146,61 @@ export function Profile() {
         <p className="text-slate-400">Manage your account preferences</p>
       </div>
 
-      <ProfileInfoSection
-        username={user.username}
-        name={user.name || user.username}
-        currency={currency}
-        onUpdateProfile={updateProfile}
-      />
+      <Tabs defaultValue="account" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2 bg-slate-800/50 border border-slate-700/50">
+          <TabsTrigger
+            value="account"
+            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+          >
+            <User className="w-4 h-4 mr-2" />
+            Account & Security
+          </TabsTrigger>
+          <TabsTrigger
+            value="data"
+            className="data-[state=active]:bg-cyan-500 data-[state=active]:text-white"
+          >
+            <Database className="w-4 h-4 mr-2" />
+            Recurring & Data
+          </TabsTrigger>
+        </TabsList>
 
-      <SecuritySection
-        isAdminUser={isAdminUser}
-        onChangePassword={changePassword}
-      />
+        <TabsContent value="account" className="space-y-6">
+          <ProfileInfoSection
+            username={user.username}
+            name={user.name || user.username}
+            currency={currency}
+            onUpdateProfile={updateProfile}
+          />
 
-      <AccountRecoverySection
-        isAdminUser={isAdminUser}
-        isLoading={loadingSecurityQuestion}
-        onOpenDialog={handleOpenSecurityDialog}
-      />
+          <SecuritySection
+            isAdminUser={isAdminUser}
+            onChangePassword={changePassword}
+          />
 
-      <RecurringExpensesSection
-        recurringExpenses={recurringExpenses}
-        currency={currency}
-        isLoading={isLoadingRecurringExpenses}
-        onDelete={(id) => deleteRecurringExpense(id)}
-        onEdit={handleEditClick}
-      />
+          <AccountRecoverySection
+            isAdminUser={isAdminUser}
+            isLoading={loadingSecurityQuestion}
+            onOpenDialog={handleOpenSecurityDialog}
+          />
+        </TabsContent>
 
-      <DangerZoneSection
-        isAdminUser={isAdminUser}
-        username={user.username}
-        onDeleteAccount={deleteAccount}
-        onNavigateHome={() => navigate("/")}
-      />
+        <TabsContent value="data" className="space-y-6">
+          <RecurringExpensesSection
+            recurringExpenses={recurringExpenses}
+            currency={currency}
+            isLoading={isLoadingRecurringExpenses}
+            onDelete={(id) => deleteRecurringExpense(id)}
+            onEdit={handleEditClick}
+          />
+
+          <DangerZoneSection
+            isAdminUser={isAdminUser}
+            username={user.username}
+            onDeleteAccount={deleteAccount}
+            onNavigateHome={() => navigate("/")}
+          />
+        </TabsContent>
+      </Tabs>
 
       <ProfileDialogs
         securityQuestionDialogOpen={securityQuestionDialogOpen}

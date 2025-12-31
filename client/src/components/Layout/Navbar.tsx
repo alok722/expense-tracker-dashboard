@@ -1,28 +1,21 @@
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useApp } from "@/context/AppContext";
 import { Button } from "@/components/ui/button";
-import { Wallet, LogOut, LayoutDashboard, User, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Wallet, LogOut, LayoutDashboard, User } from "lucide-react";
 
 export function Navbar() {
   const { user, logout } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate("/");
-    setIsMobileMenuOpen(false);
   };
 
   // Check if we're on Dashboard or Month Detail (which is part of dashboard navigation)
   const isDashboardActive = location.pathname === "/dashboard" || 
                            location.pathname.startsWith("/month/");
-
-  const handleNavClick = () => {
-    setIsMobileMenuOpen(false);
-  };
 
   return (
     <>
@@ -77,72 +70,21 @@ export function Navbar() {
               </Button>
             </div>
 
-            {/* Mobile Hamburger Menu Button */}
+            {/* Mobile Logout Button */}
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-slate-300 hover:text-white hover:bg-slate-800"
+              onClick={handleLogout}
+              className="md:hidden text-slate-400 hover:text-red-400 hover:bg-red-500/10"
+              title="Logout"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              <LogOut className="w-5 h-5" />
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Mobile Menu - Slides from Bottom */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 z-50 md:hidden bg-slate-900/98 backdrop-blur border-t border-slate-700/50 rounded-t-2xl transition-transform duration-300 ease-out ${
-          isMobileMenuOpen ? "translate-y-0" : "translate-y-full"
-        }`}
-      >
-        <div className="container mx-auto px-4 py-6 space-y-2">
-          <Link to="/dashboard" onClick={handleNavClick} className="block">
-            <Button
-              variant="ghost"
-              className={`w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800 ${
-                isDashboardActive ? "bg-slate-800 text-white" : ""
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4 mr-2" />
-              Dashboard
-            </Button>
-          </Link>
-
-          <Link to="/profile" onClick={handleNavClick} className="block">
-            <Button
-              variant="ghost"
-              className={`w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800 ${
-                location.pathname === "/profile" ? "bg-slate-800 text-white" : ""
-              }`}
-            >
-              <User className="w-4 h-4 mr-2" />
-              {user?.name || user?.username || "Profile"}
-            </Button>
-          </Link>
-
-          <Button
-            variant="ghost"
-            onClick={handleLogout}
-            className="w-full justify-start text-slate-400 hover:text-red-400 hover:bg-red-500/10"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
-        </div>
-      </div>
+      {/* Mobile Menu removed - using persistent bottom nav instead */}
     </>
   );
 }

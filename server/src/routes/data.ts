@@ -311,4 +311,32 @@ router.delete("/expense/:expenseId", async (req: Request, res: Response) => {
   }
 });
 
+// Delete entire month
+router.delete("/month/:monthId", async (req: Request, res: Response) => {
+  try {
+    const { monthId } = req.params;
+    const userId = req.query.userId as string;
+
+    if (!userId) {
+      res.status(400).json({ error: "userId is required" });
+      return;
+    }
+
+    const result = await monthDataService.deleteMonth(monthId, userId);
+    
+    // Clear insights cache
+    await InsightsService.clearMonthCache(userId, monthId);
+    await InsightsService.clearUserCache(userId);
+    
+    res.json(result);
+  } catch (error: any) {
+    if (error.message === "MONTH_NOT_FOUND") {
+      res.status(404).json({ error: "Month not found" });
+    } else {
+      logger.error("Error deleting month:", error);
+      res.status(500).json({ error: "Failed to delete month" });
+    }
+  }
+});
+
 export default router;

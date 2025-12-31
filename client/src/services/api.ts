@@ -150,6 +150,19 @@ export async function createMonth(
   return response.data;
 }
 
+export async function deleteMonth(
+  monthId: string,
+  userId: string
+): Promise<{ success: boolean; monthName: string }> {
+  const response = await api.delete<{ success: boolean; monthName: string }>(
+    `/data/month/${monthId}`,
+    {
+      params: { userId },
+    }
+  );
+  return response.data;
+}
+
 // Income
 export async function addIncome(
   monthId: string,

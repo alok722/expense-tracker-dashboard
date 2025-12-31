@@ -43,6 +43,21 @@ export function useMonthData(userId: string | undefined) {
     [userId]
   );
 
+  const deleteMonth = useCallback(
+    async (monthId: string) => {
+      if (!userId) return;
+      try {
+        await api.deleteMonth(monthId, userId);
+        setMonths((prev) => prev.filter((m) => m._id !== monthId));
+      } catch (err: any) {
+        const errorMsg = err.response?.data?.error || "Failed to delete month";
+        setError(errorMsg);
+        throw new Error(errorMsg);
+      }
+    },
+    [userId]
+  );
+
   const updateMonthInState = useCallback((updatedMonth: MonthData) => {
     setMonths((prev) =>
       prev.map((m) => (m._id === updatedMonth._id ? updatedMonth : m))
@@ -55,6 +70,7 @@ export function useMonthData(userId: string | undefined) {
     error,
     refreshData,
     createMonth,
+    deleteMonth,
     updateMonthInState,
     setMonths,
   };

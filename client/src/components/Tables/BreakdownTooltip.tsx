@@ -2,6 +2,7 @@ import { IncomeEntry, ExpenseEntry } from "@/types";
 import { formatCurrency } from "@/utils/calculations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ValidatedInput } from "@/components/ui/validated-input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -353,7 +354,7 @@ export function BreakdownTooltip({
               <Label htmlFor="edit-amount" className="text-slate-300">
                 Amount ({currency === "INR" ? "₹" : "$"})
               </Label>
-              <Input
+              <ValidatedInput
                 id="edit-amount"
                 type="number"
                 value={editForm.amount}
@@ -363,7 +364,18 @@ export function BreakdownTooltip({
                 className="bg-slate-800 border-slate-700 text-white"
                 min="0"
                 step="0.01"
+                inputMode="decimal"
                 disabled={isSubmitting}
+                autoFocus
+                realTimeValidation={true}
+                validation={(value) => {
+                  const num = parseFloat(value);
+                  if (!value) return "Amount is required";
+                  if (isNaN(num)) return "Please enter a valid number";
+                  if (num <= 0) return "Amount must be greater than 0";
+                  return null;
+                }}
+                onEnter={handleSaveEdit}
               />
             </div>
 
@@ -371,7 +383,7 @@ export function BreakdownTooltip({
               <Label htmlFor="edit-note" className="text-slate-300">
                 Note
               </Label>
-              <Input
+              <ValidatedInput
                 id="edit-note"
                 value={editForm.note}
                 onChange={(e) =>
@@ -379,6 +391,15 @@ export function BreakdownTooltip({
                 }
                 className="bg-slate-800 border-slate-700 text-white"
                 disabled={isSubmitting}
+                maxLength={100}
+                validation={(value) => {
+                  if (!value.trim()) return "Note is required";
+                  if (value.length < 3) return "Note must be at least 3 characters";
+                  return null;
+                }}
+                showClearButton
+                onClear={() => setEditForm({ ...editForm, note: "" })}
+                onEnter={handleSaveEdit}
               />
             </div>
 
